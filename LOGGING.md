@@ -16,7 +16,7 @@ console.log('Hello world!');
 
 We use logging to observe the behaviour of our code, quickly and easily, and as a fallback in lieu of more advanced 
 tooling that may not be present in an applications deployment context, such as debuggers or profilers. But, 
-observability has a natural trade-off &ndash; I/O is expensive.  It is a fundamental obligation tThat application 
+observability has a natural trade-off &ndash; I/O is expensive.  It is a fundamental obligation that application 
 logging is performant.
 
 > __Good Design Rule:__  application logging must be performant.
@@ -67,7 +67,7 @@ wrapping module, which has the benefit of isolating that pesky eslint no-console
 ---------------------------------------------------
 
 Now, we're definitely _not in the business of writing loggers_, and there are great packages in the community like 
-[winston](https://www.npmjs.com/package/winston) that pretty much abstract logging for us already, but the simple
+[winston](https://www.npmjs.com/package/winston) that pretty much abstract logging for us already, but the 
 [Logger](https://github.com/craigparra/alt-logger/blob/master/Logger.js) class is a succinct example of a 
 simple logger facade that demonstrates some useful logging utility that might otherwise be overlooked in the weeds of
 winston, and also opens up our options, as we will see.
@@ -144,10 +144,10 @@ if (logger.isDebugEnabled()){
 }
 ```
 
-`Logger'` is extended by the [ConsoleLogger](https://github.com/craigparra/alt-logger/blob/master/ConsoleLogger.js)
+The `Logger` class is extended by the [ConsoleLogger](https://github.com/craigparra/alt-logger/blob/master/ConsoleLogger.js)
 class, as shown.
 
-![](./ConsoleLogger.png)
+![](./images/ConsoleLogger.png)
 
 
 First and for most, `ConsoleLogger`, implements the output transport with `console.log()` exempted from the usual
@@ -249,7 +249,7 @@ development only, perhaps if you are JSON dyslexic.
 > __Good Design Rule:__ application log lines should be output formatted as JSON in production.
 
 You will note that the parameters in the line `new ConsoleLogger(`@myscope/mypackage/MyClass`,new JSONFormatter(),LoggerLevel.INFO);` 
-are clunky, and that's because the ConsoleLogger doesn't quite meet the second part of our design expectation, that logging
+are clumsy, and that's because the ConsoleLogger doesn't quite meet the second part of our design expectation, that logging
 should be specific severity and by _context_.  We provide a contextual category, and we write it to the log line, but
 it isn't actually used to determine if a log line should be output.  Ideally, we should determine the severity level by
 the context category that the logger is defined with, which we do with the `ConfigurableLogger`.
@@ -376,28 +376,48 @@ can adjust the logging per class or file that is of working interest.
 
 > __Good Design Rule:__  log categories should match your module require path.
 
+At this point, we can now instantiate a logger like so, which again is a little bit clumsy.
 
 ```javascript
-module.exports = class DelegatingLogger {
-  constructor(provider) {
-    this.provider = provider;
-  }
+const {config} = require('config');
+const {ConfigurableLogger, ConsoleLogger} = require('@alt-javascript/logger');
+const logger = new ConfigurableLogger(config,new ConsoleLogger(),'@myorg/mypackage/MyModule');
 
-  setLevel(level) {
-    this.provider.setLevel(level);
-  }
+logger.info('Hello world!');
+```
+Enter the `LoggerFactory`.
 
-  log(level, message, meta) {
-    this.provider.log(message, meta);
-  }
+<a name="loggerfactory">LoggerFactory</a>
+-------------------------------------------
 
-  //&mldr;
+The [LoggerFactory](https://github.com/craigparra/alt-logger/blob/master/LoggerFactory.js) is a static convenience class
+to streamline the syntax for creating a logger instance as needed, with a more succinct syntax.  This is good
+option in lieu of a more sophisticated way to do this, like dependency injection.
 
-  isVerboseEnabled() {
-    return this.provider.isVerboseEnabled();
-  }
+
+> __Good Design Rule:__  factory classes are a simpe way to streamline creating instances with complex constructor inputs.
+
+
+```javascript
+const ConfigurableLogger = require('./ConfigurableLogger');
+const ConsoleLogger = require('./ConsoleLogger');
+const LoggerRegistry = require('./LoggerRegistry');
+
+module.exports = class LoggerFactory {
+    static loggerRegistry = new LoggerRegistry();
+
+    static getLogger(config, category, provider, configPath, registry) {
+      return new ConfigurableLogger(config,
+        provider || new ConsoleLogger(category),
+        category,
+        configPath,
+        registry || LoggerFactory.loggerRegistry,
+      );
+    }
 };
 ```
+
+Our code now becomes:
 
 ```javascript
 const {config} = require('config');
@@ -406,10 +426,3 @@ const logger = LoggerFactory.getLogger(config,'@myorg/mypackage/MyModule');
 
 logger.info('Hello world!');
 ```
-The LoggerFactory will create a ConsoleLogger (uses `console.log('...')`) object instance, with the root logging level
-set to `info` by default.  To change the logging level for your module (category), add something similar to the
-following in your [config](https://www.npmjs.com/package/config) files.
-
-
-
-

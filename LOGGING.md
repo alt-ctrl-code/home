@@ -1,4 +1,4 @@
-<a name="logging">Logging</a>
+<a name="logging">Logging Design Trail</a>
 =============================
 
 <a name="why">Why Start With Logging?</a>
@@ -23,6 +23,15 @@ logging is performant.
 
 Writing every other line to disk, and spamming output streams with megabytes of data no man or machine could reasonably 
 consume is bad. But, _some_ people do it.
+
+>For the purpose of this material, we are restricting our definition of “logging” to log lines written by the developer 
+to observe the behaviour of the system at runtime.  That is important, because it restricts our design. 
+Transaction and audit logs (like example http access logs), do not meet this definition of “logging” in the strict sense, 
+and are more rightly though of as an application feature we might implement to meet a business requirement, 
+like legal compliance.
+>
+> They might just happen to use a logging façade, in exactly the same way as info logging – but we are not 
+considering these patterns here.
 
 <a name="why">JavaScript Logging</a>
 ------------------------------------
@@ -142,7 +151,7 @@ class, as shown.
 
 
 First and for most, `ConsoleLogger`, implements the output transport with `console.log()` exempted from the usual
-eslin no-console rule in this case, and adds in the familiar `info`, `debug` and `error` like functions that we 
+eslint `no-console` rule in this case, and adds in the familiar `info`, `debug` and `error` like functions that we 
 expect to see.
 
 ```javascript
@@ -235,12 +244,172 @@ And you will get:
 
 It is a good choice to output log lines as JSON in production, as it is easily consumed by log aggregation tools like 
 [Logstash](https://www.elastic.co/logstash/), and okay for humans as well.   Plain text should be reserved for local 
-developement only.
+development only, perhaps if you are JSON dyslexic.
 
 > __Good Design Rule:__ application log lines should be output formatted as JSON in production.
 
 You will note that the parameters in the line `new ConsoleLogger(`@myscope/mypackage/MyClass`,new JSONFormatter(),LoggerLevel.INFO);` 
 are clunky, and that's because the ConsoleLogger doesn't quite meet the second part of our design expectation, that logging
-should by specific severity and _context_.  We provide a contextual category, and we write it to the log line, but
+should be specific severity and by _context_.  We provide a contextual category, and we write it to the log line, but
 it isn't actually used to determine if a log line should be output.  Ideally, we should determine the severity level by
 the context category that the logger is defined with, which we do with the `ConfigurableLogger`.
+
+<a name="configlogger">ConfigurableLogger</a>
+-------------------------------------------
+
+The [ConfigurableLogger](https://github.com/craigparra/alt-logger/blob/master/ConfigurableLogger.js)
+class, as shown, leverages the popular [config](https://www.npmjs.com/package/config) package to define and set 
+ `LoggerLevel` values for a given Logger `category` as application configuration.  Application configuration is static or 
+immutable contextual information that is provided to our application at bootstrap.  The contextual information
+in this case is the log levels required for each logger category for the specific deployment configuration 
+the application is running in, say local to the developer versus in production.
+
+It should be obvious that log levels for your categories will be different locally when debugging, than in production 
+where for better performance levels should be set to `LoggerLevel.Error`.
+
+> __Good Design Rule:__ application log levels should be set to ERROR and above in production.
+
+
+Let's take a look at the design of `ConfigurableLogger`.  First, rather than extending the behaviour of the `ConsoleLogger`
+as we did with `Logger`, instead we aggregate and delegate behaviour to `ConsoleLogger` as one of many possible providers,
+by extending a new `DelegatingLogger` class.
+
+![](./images/DelegatingLogger.png)
+
+The `DelegatingLogger` accepts a logging `provider`, to which it  hands off all the functions.  We pass
+a ConsoleLogger, or other implementation  into the constructor to do the actual work of logging lines.  We 
+provide a [WinstonLogger](https://github.com/craigparra/alt-logger/blob/master/WinstonLogger.js),
+[MultiLogger](https://github.com/craigparra/alt-logger/blob/master/MultiLogger.js) and
+[EphemeralLogger](https://github.com/craigparra/alt-logger/blob/master/EphemeralLogger.js) as examples.
+
+This allows the `ConfigurableLogger` to apply the category log level configuration, to any of these working facade
+classes.  Along with the provider, the class accepts a config instance, a category and a configPath (we'll ignore
+the `registry` for now).
+
+```javascript
+const DelegatingLogger = require('./DelegatingLogger');
+
+module.exports = class ConfigurableLogger extends DelegatingLogger {
+  constructor(config, provider, category, configPath, registry) {
+    super(provider);
+    this.config = config;
+    this.category = category;
+    this.configPath = configPath;
+    this.registry = registry;
+    this.provider.setLevel(
+      ConfigurableLogger.getLoggerLevel(
+        this.category,
+        this.configPath,
+        this.config,
+        this.registry,
+      ),
+    );
+
+    ConfigurableLogger.prototype.setLevel = DelegatingLogger.prototype.setLevel;
+    ConfigurableLogger.prototype.log = DelegatingLogger.prototype.log;
+    ConfigurableLogger.prototype.debug = DelegatingLogger.prototype.debug;
+    ConfigurableLogger.prototype.verbose = DelegatingLogger.prototype.verbose;
+    ConfigurableLogger.prototype.info = DelegatingLogger.prototype.info;
+    ConfigurableLogger.prototype.warn = DelegatingLogger.prototype.warn;
+    ConfigurableLogger.prototype.error = DelegatingLogger.prototype.error;
+    ConfigurableLogger.prototype.fatal = DelegatingLogger.prototype.fatal;
+
+    ConfigurableLogger.prototype.isLevelEnabled = DelegatingLogger.prototype.isLevelEnabled;
+    ConfigurableLogger.prototype.isDebugEnabled = DelegatingLogger.prototype.isDebugEnabled;
+    ConfigurableLogger.prototype.isVerboseEnabled = DelegatingLogger.prototype.isVerboseEnabled;
+    ConfigurableLogger.prototype.isInfoEnabled = DelegatingLogger.prototype.isInfoEnabled;
+    ConfigurableLogger.prototype.isWarnEnabled = DelegatingLogger.prototype.isWarnEnabled;
+    ConfigurableLogger.prototype.isErrorEnabled = DelegatingLogger.prototype.isErrorEnabled;
+    ConfigurableLogger.prototype.isFatalEnabled = DelegatingLogger.prototype.isFatalEnabled;
+  }
+
+  static getLoggerLevel(category, configPath, config, registry) {
+    let level = 'info';
+    const path = configPath || 'logging.level';
+    const categories = (category || '').split('/');
+    let pathStep = path;
+
+    const root = `${pathStep}./`;
+    if (registry.get(root)) {
+      level = registry.get(root);
+    } else if (config.has(root)) {
+      level = config.get(root);
+      registry.add(root, level);
+    }
+
+    for (let i = 0; i < categories.length; i++) {
+      pathStep = `${pathStep}${i === 0 ? '.' : '/'}${categories[i]}`;
+      if (registry.get(pathStep)) {
+        level = registry[pathStep];
+      } else if (config.has(pathStep)) {
+        level = config.get(pathStep);
+        registry.add(pathStep, level);
+      }
+    }
+    return level;
+  }
+};
+```
+
+This is then used to read the `LoggerLevel` for the instance category from the config file.  The categories act as '/'
+separated hierarchy, with the deeper (more specific) paths taking precendence.  There is a root '/' config path for
+all categories.  The `logging.level` config path is used as the entry point by default, but can be changed with the 
+`configPath` constructor argument.
+
+>Watch out for period '.' characters in your categories, as they have semantic meaning in the config package 
+
+`local-development.json`
+```json
+{
+ "logging" : {
+  "level" : {
+   "/" : "info",
+   "@myorg/mypackage/" : "verbose",
+   "@myorg/mypackage/MyModule" : "debug"
+  }
+ }
+}
+```
+
+Though just arbitrary strings, it's a good idea to use your class or module requires path as the category, so you
+can adjust the logging per class or file that is of working interest.
+
+> __Good Design Rule:__  log categories should match your module require path.
+
+
+```javascript
+module.exports = class DelegatingLogger {
+  constructor(provider) {
+    this.provider = provider;
+  }
+
+  setLevel(level) {
+    this.provider.setLevel(level);
+  }
+
+  log(level, message, meta) {
+    this.provider.log(message, meta);
+  }
+
+  //&mldr;
+
+  isVerboseEnabled() {
+    return this.provider.isVerboseEnabled();
+  }
+};
+```
+
+```javascript
+const {config} = require('config');
+const {LoggerFactory} = require('@alt-javascript/logger');
+const logger = LoggerFactory.getLogger(config,'@myorg/mypackage/MyModule');
+
+logger.info('Hello world!');
+```
+The LoggerFactory will create a ConsoleLogger (uses `console.log('...')`) object instance, with the root logging level
+set to `info` by default.  To change the logging level for your module (category), add something similar to the
+following in your [config](https://www.npmjs.com/package/config) files.
+
+
+
+

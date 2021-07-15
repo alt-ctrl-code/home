@@ -150,7 +150,7 @@ class, as shown.
 ![](./images/ConsoleLogger.png)
 
 
-First and for most, `ConsoleLogger`, implements the output transport with `console.log()` exempted from the usual
+First and foremost, `ConsoleLogger`, implements the output transport with `console.log()` exempted from the usual
 eslint `no-console` rule in this case, and adds in the familiar `info`, `debug` and `error` like functions that we 
 expect to see.
 
@@ -250,7 +250,7 @@ development only, perhaps if you are JSON dyslexic.
 
 You will note that the parameters in the line `new ConsoleLogger(`@myscope/mypackage/MyClass`,new JSONFormatter(),LoggerLevel.INFO);` 
 are clumsy, and that's because the ConsoleLogger doesn't quite meet the second part of our design expectation, that logging
-should be specific severity and by _context_.  We provide a contextual category, and we write it to the log line, but
+should be specific by severity and by _context_.  We provide a contextual category, and we write it to the log line, but
 it isn't actually used to determine if a log line should be output.  Ideally, we should determine the severity level by
 the context category that the logger is defined with, which we do with the `ConfigurableLogger`.
 
@@ -426,3 +426,111 @@ const logger = LoggerFactory.getLogger(config,'@myorg/mypackage/MyModule');
 
 logger.info('Hello world!');
 ```
+
+<a name="loggerfactory">LoggerRegistry</a>
+-------------------------------------------
+
+Application configuration is a great way to bootstrap our application with log levels suitable to the
+deployment context it will be running in, but it immutable and static, which restricts our ability to dial our
+logging up and down if we needed to during run time, which means we are tempted to set our log levels to verbosely 
+(lower than ERROR) and risk performance degradation in production.  To avoid this, it's good to be able to 
+change a level at runtime.
+
+> __Good Design Rule:__  being able to alter log levels at run time, avoids the tempatation to set them to verbosely.
+ 
+We achieve this with the [LoggerRegistry](https://github.com/craigparra/alt-logger/blob/master/LoggerRegistry.js), which
+the `ConfigurableLogger` uses as a runtime cache, after it has initally loaded the level for a given logger category.
+The `LoggerRegistry` can then be manipulated to alter the log level of a category by some means, for example 
+programatically in a test suite.
+
+The `LoggerFactory` creates a static `LoggerRegistry` instance by defualt, which is okay in lieu of a better way to do 
+this, like dependency injection.
+
+It doesn't get much lighter-weight than this.
+
+```javascript
+module.exports = class LoggerRegistry {
+  constructor() {
+    this.cache = {};
+  }
+
+  get(category) {
+    return this.cache[category];
+  }
+
+  add(category, level) {
+    this.cache[category] = level;
+  }
+};
+```
+
+<a name="loggerfactory">Testing with the EphemeralLogger</a>
+------------------------------------------------------------
+
+Testing logging is hard, unless you have designed it to be testable, and testability should be a first class concern. 
+
+> __Good Design Rule:__  design for testing upfront, testing is a first class concern.
+
+We include and [EphemeralLogger](https://github.com/craigparra/alt-logger/blob/master/EphemeralLogger.js) with an
+`EphemeralLogSink` that will capture log lines that can be asserted, so you can test if your classes that use logging
+actually behave as you expect them to - crazy, but true.
+
+```javascript
+const Logger = require('./Logger');
+const LoggerLevel = require('./LoggerLevel');
+const JSONFormatter = require('./JSONFormatter');
+const EphemeralLogSink = require('./EphemeralLogSink');
+
+module.exports = class EphemeralLogger extends Logger {
+  constructor(category, formatter, level, meta, levels) {
+    super(category, level, levels);
+    this.formatter = formatter || new JSONFormatter();
+    this.meta = meta || {};
+    this.sink = new EphemeralLogSink();
+
+    EphemeralLogger.prototype.setLevel = Logger.prototype.setLevel;
+    EphemeralLogger.prototype.isLevelEnabled = Logger.prototype.isLevelEnabled;
+    EphemeralLogger.prototype.isDebugEnabled = Logger.prototype.isDebugEnabled;
+    EphemeralLogger.prototype.isVerboseEnabled = Logger.prototype.isVerboseEnabled;
+    EphemeralLogger.prototype.isInfoEnabled = Logger.prototype.isInfoEnabled;
+    EphemeralLogger.prototype.isWarnEnabled = Logger.prototype.isWarnEnabled;
+    EphemeralLogger.prototype.isErrorEnabled = Logger.prototype.isErrorEnabled;
+    EphemeralLogger.prototype.isFatalEnabled = Logger.prototype.isFatalEnabled;
+  }
+
+  log(level, message, meta) {
+    if (this.levels[level] <= this.level) {
+      this.sink.log(this.formatter.format((new Date()), this.category, level, message, meta));
+    }
+  }
+
+  debug(message, meta) {
+    this.log(LoggerLevel.DEBUG, message, meta);
+  }
+
+  //...  
+
+  fatal(message, meta) {
+    this.log(LoggerLevel.FATAL, message, meta);
+  }
+};
+```
+Your test code would look like:
+
+```javascript
+const {config} = require('config');
+const {LoggerFactory,EphemeralLogger} = require('@alt-javascript/logger');
+const ephemeralLogger = new EphemeralLogger('@myorg/mypackage/MyModule');
+const logger = LoggerFactory.getLogger(config,'@myorg/mypackage/MyModule', ephemeralLogger);
+
+logger.info('Hello world!');
+
+//...
+
+assert.isTrue(ephemeralLogger.sink.loglines[0].contains('Hello world!'))
+```
+
+<a name="moduledependencies">Module Dependency Diagram</a>
+------------------------------------------------------------
+
+![](./images/loggingModules.png)

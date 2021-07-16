@@ -9,7 +9,7 @@ A guided design and development exercise in _plain old_ JavaScript
 2. [Some History](#history)
 3. [Why The History Matters](#javascriptmatters)
 4. [Structure](#structure)
-    1. [Module 1 Package Hygience](https://github.com/craigparra/alt-package-conventions#README)
+    1. [Module 1 Package Hygience](https://github.com/craigparra/alt-package-conventions#readme)
     1. [Module 2 Logging](./LOGGING.md)
     1. Module 3 Configuration
 
@@ -82,6 +82,6 @@ features and code.
 The module application source and packages are provided (and linked) publicly here on [GitHub](https://github.com/) and
 [npm](https://www.npmjs.com/) .
 
-- [Module 1 Packaging](https://github.com/craigparra/alt-package-conventions#README)
+- [Module 1 Packaging](https://github.com/craigparra/alt-package-conventions#readme)
 - [Module 2 Logging](./LOGGING.md)
 - Module 3 Configuration

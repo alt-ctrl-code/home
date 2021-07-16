@@ -9,9 +9,9 @@ A guided design and development exercise in _plain old_ JavaScript
 2. [Some History](#history)
 3. [Why The History Matters](#javascriptmatters)
 4. [Structure](#structure)
-    1. [Module 1 Package Hygience](./LOGGING.md)
+    1. Module 1 Package Hygience
     1. [Module 2 Logging](./LOGGING.md)
-    1. [Module 3 Configuration](#applications)
+    1. Module 3 Configuration
 
 <a name="audience">Audience</a>
 -------------------------------

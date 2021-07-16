@@ -132,7 +132,7 @@ intended severity for that specific logger instance, with the familiar `info`, `
 The `Logger` doesn't actually implement the `debug` or other functions yet, because it is an ostensibly "abstract" class
 with no output transport, combined with the way JavaScript prototype inheritance works.  
 
-What `Logger'` does provide though, is an interface to pre-test if a severity level is "enabled", before performing an 
+What `Logger` does provide though, is an interface to pre-test if a severity level is "enabled", before performing an 
 expensive operation to output.   Because logging is entirely for the developer or operator, and not an application 
 feature as such, and it's I/O may have an impact on performance, simply invoking the usual 
 `logger.debug('Show me the result of a ${costlyFunction()}')` would be too late in this example statement, because the 

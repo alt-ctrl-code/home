@@ -431,7 +431,7 @@ logger.info('Hello world!');
 -------------------------------------------
 
 Application configuration is a great way to bootstrap our application with log levels suitable to the
-deployment context it will be running in, but it immutable and static, which restricts our ability to dial our
+deployment context it will be running in, but it is immutable and static, which restricts our ability to dial our
 logging up and down if we needed to during run time, which means we are tempted to set our log levels to verbosely 
 (lower than ERROR) and risk performance degradation in production.  To avoid this, it's good to be able to 
 change a level at runtime.

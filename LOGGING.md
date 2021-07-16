@@ -432,7 +432,7 @@ logger.info('Hello world!');
 
 Application configuration is a great way to bootstrap our application with log levels suitable to the
 deployment context it will be running in, but it is immutable and static, which restricts our ability to dial our
-logging up and down if we needed to during run time, which means we are tempted to set our log levels to verbosely 
+logging up and down if we needed to during run time, which means we are tempted to set our log levels too verbosely 
 (lower than ERROR) and risk performance degradation in production.  To avoid this, it's good to be able to 
 change a level at runtime.
 
@@ -443,7 +443,7 @@ the `ConfigurableLogger` uses as a runtime cache, after it has initally loaded t
 The `LoggerRegistry` can then be manipulated to alter the log level of a category by some means, for example 
 programatically in a test suite.
 
-The `LoggerFactory` creates a static `LoggerRegistry` instance by defualt, which is okay in lieu of a better way to do 
+The `LoggerFactory` creates a static `LoggerRegistry` instance by default, which is okay in lieu of a better way to do 
 this, like dependency injection.
 
 It doesn't get much lighter-weight than this.

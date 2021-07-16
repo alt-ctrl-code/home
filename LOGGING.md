@@ -1,6 +1,9 @@
 <a name="logging">Logging Design Trail</a>
 =============================
 
+This material builds a simple logging façade, for the console (and [winston](https://www.npmjs.com/package/winston))
+, guided by good design rules  and architecture principles.
+
 <a name="why">Why Start With Logging?</a>
 -------------------------------------------
 When writing application code, it’s a useful if our application code is observable.

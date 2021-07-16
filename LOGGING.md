@@ -436,7 +436,7 @@ logging up and down if we needed to during run time, which means we are tempted 
 (lower than ERROR) and risk performance degradation in production.  To avoid this, it's good to be able to 
 change a level at runtime.
 
-> __Good Design Rule:__  being able to alter log levels at run time, avoids the tempatation to set them to verbosely.
+> __Good Design Rule:__  being able to alter log levels at run time, avoids the tempatation to set them too verbosely.
  
 We achieve this with the [LoggerRegistry](https://github.com/craigparra/alt-logger/blob/master/LoggerRegistry.js), which
 the `ConfigurableLogger` uses as a runtime cache, after it has initally loaded the level for a given logger category.

@@ -26,7 +26,7 @@ consume is bad. But, _some_ people do it.
 
 >For the purpose of this material, we are restricting our definition of “logging” to log lines written by the developer 
 to observe the behaviour of the system at runtime.  That is important, because it restricts our design. 
-Transaction and audit logs (like example http access logs), do not meet this definition of “logging” in the strict sense, 
+Transaction and audit logs (like, for example, http access logs), do not meet this definition of “logging” in the strict sense, 
 and are more rightly though of as an application feature we might implement to meet a business requirement, 
 like legal compliance.
 >

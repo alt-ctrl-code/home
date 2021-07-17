@@ -160,3 +160,67 @@ follows that is is a good design not to get application configuration from the f
 application file bundle)
 
 > __Good Design Rule:__  inject configuration from files bundled with your application.
+
+<a name="constants">The Word on CONSTANTS</a>
+---------------------------------------------
+
+Now, before we get into the weeds with modules, lets just have _the word_ on `CONSTANTS`. Configuration and constants 
+are also separate concerns, since configuration is by definition NOT CONSTANT.  
+
+But it's not uncommon to see this kind of code.
+
+```javascript
+const constants = {};
+constants.ENV = process.env.NODE_ENV; // is a smell, say no more
+```
+
+Apart from the obvious, that the `ENV` property is not in fact a `const` (noting that JavaScript doesn't cater well for 
+class constants (yet) and we adopt `UPPER_SNAKE_CASE` as a well understood convention to indicate constancy instead),
+the `process.env.NODE_ENV` is by definition, essentially a variable, constant only in the lifetime or scope of an
+application's deployment context.
+
+> __Good Design Rule:__  separate CONSTANTS from configuration.
+
+
+The `constants` const is also _global_ to the scope of the module, and worse, often exported as such. Global constants
+are a smell, and constants should be grouped, enumerated and exposed via a meaningful module:
+
+```javascript
+const {FINE_STRUCTURE} = require ('FundamentalConstants'); 
+const {c,G} = require ('PhysicalConstants');
+```
+> __Good Design Rule:__  constants should be grouped, enumerated and exposed via a meaningful module.
+
+<a name="jscondig">Common Configuration Modules</a>
+-------------------------------------
+
+### dotenv and dotenv-expand
+
+The JavaScript open-source community provides the popular [dotenv](https://www.npmjs.com/package/dotenv) packages for 
+locally managing application configuration provided as environment variables. On the basis that the only application configuration that 
+should be injected into your application from outside should be the unique handle of the deployment (via NODE_ENV) , 
+it follows that it is also a good design rule to aver the need for and use of dotenv and related `.env` files that are 
+uncontrolled via `.gitignore`.
+
+We're not saying dotenv isn't great, it is &ndash; just that avoiding environment variables negates the need for it.
+
+> __Good Design Rule:__  aver thus use of dotenv, if you can avoid the use of env vars.
+
+### [node-]config
+
+The JavaScript open-source community also provides the excellent [config](https://www.npmjs.com/package/config) package 
+for managing application configuration. As with the [logging](./LOGGING.md) material, it is a good design rule to 
+abstract all our configuration behind a common façade, which has the benefit of standardising how it is achieved and 
+encapsulating common good design features.
+
+> __Good Design Rule:__ abstract all config loading behind a common façade.
+
+It is a good design rule to use the [config](https://www.npmjs.com/package/config)  package façade to isolate all 
+configuration, and aver the use of `.env` files in favour of a `config/local-development.json` file. It is also good 
+design rule to use JSON as the format, rather than .js or .yml (yes, yaml). Executable configuration and deferred evaluation at bootstrap are just bad in principle, and we don’t need yet another lazy markup syntax, especially one that uses whitespace as a scope discriminator.
+
+> __Good Design Rule:__ prefer a [config](https://www.npmjs.com/package/config) module `config/local-development.json`, in 
+> JSON over a [dotenv](https://www.npmjs.com/package/dotenv) module `.env` file.
+
+The `config` package is great out of the box, but there is a couple of features it lacks holding it back, which we will
+extend shortly.  

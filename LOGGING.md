@@ -152,13 +152,14 @@ class, as shown.
 
 First and foremost, `ConsoleLogger`, implements the output transport with `console.log()` exempted from the usual
 eslint `no-console` rule in this case, and adds in the familiar `info`, `debug` and `error` like functions that we 
-expect to see.
+expect to see.  Notice that the `console` is also injected with `consoleArg`.
 
 ```javascript
-  log(level, message, meta) {
-    if (this.levels[level] <= this.level) {
-        // eslint-disable-next-line no-console
-        console.log(this.formatter.format((new Date()), this.category, level, message, meta));
+     log(level, message, meta) {
+     if (this.levels[level] <= this.level) {
+      // eslint-disable-next-line no-console
+      this.console.log(this.formatter.format((new Date()), this.category, level, message, meta));
+     }
     }
     
     debug(message, meta) {
@@ -172,58 +173,59 @@ Take note of how the prototype inheritance works (it explains why `Logger` doesn
 redundant functions).
 
 ```javascript
-  
 const Logger = require('./Logger');
 const LoggerLevel = require('./LoggerLevel');
 const JSONFormatter = require('./JSONFormatter');
 
 module.exports = class ConsoleLogger extends Logger {
-  constructor(category, formatter, level, meta, levels) {
-    super(category, level, levels);
-    this.formatter = formatter || new JSONFormatter();
-    this.meta = meta || {};
+ constructor(category, level, levels, meta, formatter, consoleArg) {
+  super(category, level, levels);
+  this.formatter = formatter || new JSONFormatter();
+  this.meta = meta || {};
+  this.console = consoleArg || console;
 
-    ConsoleLogger.prototype.setLevel = Logger.prototype.setLevel;
-    ConsoleLogger.prototype.isLevelEnabled = Logger.prototype.isLevelEnabled;
-    ConsoleLogger.prototype.isDebugEnabled = Logger.prototype.isDebugEnabled;
-    ConsoleLogger.prototype.isVerboseEnabled = Logger.prototype.isVerboseEnabled;
-    ConsoleLogger.prototype.isInfoEnabled = Logger.prototype.isInfoEnabled;
-    ConsoleLogger.prototype.isWarnEnabled = Logger.prototype.isWarnEnabled;
-    ConsoleLogger.prototype.isErrorEnabled = Logger.prototype.isErrorEnabled;
-    ConsoleLogger.prototype.isFatalEnabled = Logger.prototype.isFatalEnabled;
-  }
+  ConsoleLogger.prototype.setLevel = Logger.prototype.setLevel;
+  ConsoleLogger.prototype.isLevelEnabled = Logger.prototype.isLevelEnabled;
+  ConsoleLogger.prototype.isDebugEnabled = Logger.prototype.isDebugEnabled;
+  ConsoleLogger.prototype.isVerboseEnabled = Logger.prototype.isVerboseEnabled;
+  ConsoleLogger.prototype.isInfoEnabled = Logger.prototype.isInfoEnabled;
+  ConsoleLogger.prototype.isWarnEnabled = Logger.prototype.isWarnEnabled;
+  ConsoleLogger.prototype.isErrorEnabled = Logger.prototype.isErrorEnabled;
+  ConsoleLogger.prototype.isFatalEnabled = Logger.prototype.isFatalEnabled;
+ }
 
-  log(level, message, meta) {
-    if (this.levels[level] <= this.level) {
-      // eslint-disable-next-line no-console
-      console.log(this.formatter.format((new Date()), this.category, level, message, meta));
-    }
+ log(level, message, meta) {
+  if (this.levels[level] <= this.level) {
+   // eslint-disable-next-line no-console
+   this.console.log(this.formatter.format((new Date()), this.category, level, message, meta));
   }
+ }
 
-  debug(message, meta) {
-    this.log(LoggerLevel.DEBUG, message, meta);
-  }
+ debug(message, meta) {
+  this.log(LoggerLevel.DEBUG, message, meta);
+ }
 
-  verbose(message, meta) {
-    this.log(LoggerLevel.VERBOSE, message, meta);
-  }
+ verbose(message, meta) {
+  this.log(LoggerLevel.VERBOSE, message, meta);
+ }
 
-  info(message, meta) {
-    this.log(LoggerLevel.INFO, message, meta);
-  }
+ info(message, meta) {
+  this.log(LoggerLevel.INFO, message, meta);
+ }
 
-  warn(message, meta) {
-    this.log(LoggerLevel.WARN, message, meta);
-  }
+ warn(message, meta) {
+  this.log(LoggerLevel.WARN, message, meta);
+ }
 
-  error(message, meta) {
-    this.log(LoggerLevel.ERROR, message, meta);
-  }
+ error(message, meta) {
+  this.log(LoggerLevel.ERROR, message, meta);
+ }
 
-  fatal(message, meta) {
-    this.log(LoggerLevel.FATAL, message, meta);
-  }
+ fatal(message, meta) {
+  this.log(LoggerLevel.FATAL, message, meta);
+ }
 };
+
 ```
 
 At this point, we have a fairly high functioning console logging abstraction with only five classes in play: `Logger`,
@@ -340,7 +342,7 @@ module.exports = class ConfigurableLogger extends DelegatingLogger {
     for (let i = 0; i < categories.length; i++) {
       pathStep = `${pathStep}${i === 0 ? '.' : '/'}${categories[i]}`;
       if (registry.get(pathStep)) {
-        level = registry[pathStep];
+        level = registry.get(pathStep);
       } else if (config.has(pathStep)) {
         level = config.get(pathStep);
         registry.add(pathStep, level);
@@ -464,15 +466,15 @@ module.exports = class LoggerRegistry {
 };
 ```
 
-<a name="loggerfactory">Testing with the EphemeralLogger</a>
+<a name="loggerfactory">Testing with the CachingConsoleLoggerFactory</a>
 ------------------------------------------------------------
 
 Testing logging is hard, unless you have designed it to be testable, and testability should be a first class concern. 
 
 > __Good Design Rule:__  design for testing upfront, testing is a first class concern.
 
-We include and [EphemeralLogger](https://github.com/craigparra/alt-logger/blob/master/EphemeralLogger.js) with an
-`EphemeralLogSink` that will capture log lines that can be asserted, so you can test if your classes that use logging
+We include and [CachingConsole](https://github.com/craigparra/alt-logger/blob/master/CachingConsole.js)  that will 
+capture log lines that can be asserted, so you can test if your classes that use logging
 actually behave as you expect them to - crazy, but true.
 
 ```javascript

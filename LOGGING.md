@@ -1,6 +1,9 @@
 <a name="logging">Logging Design Trail</a>
 =============================
 
+This material builds a simple logging façade, for the console (and [winston](https://www.npmjs.com/package/winston))
+, guided by good design rules  and architecture principles.
+
 <a name="why">Why Start With Logging?</a>
 -------------------------------------------
 When writing application code, it’s a useful if our application code is observable.
@@ -403,17 +406,17 @@ option in lieu of a more sophisticated way to do this, like dependency injection
 ```javascript
 const ConfigurableLogger = require('./ConfigurableLogger');
 const ConsoleLogger = require('./ConsoleLogger');
-const LoggerRegistry = require('./LoggerRegistry');
+const LoggerCategoryCache = require('./LoggerCategoryCache');
 
 module.exports = class LoggerFactory {
-    static loggerRegistry = new LoggerRegistry();
+    static loggerCategoryCache = new LoggerCategoryCache();
 
     static getLogger(config, category, provider, configPath, registry) {
       return new ConfigurableLogger(config,
         provider || new ConsoleLogger(category),
         category,
         configPath,
-        registry || LoggerFactory.loggerRegistry,
+        registry || LoggerFactory.loggerCategoryCache,
       );
     }
 };
@@ -429,7 +432,7 @@ const logger = LoggerFactory.getLogger(config,'@myorg/mypackage/MyModule');
 logger.info('Hello world!');
 ```
 
-<a name="loggerfactory">LoggerRegistry</a>
+<a name="cache">LoggerCategoryCache</a>
 -------------------------------------------
 
 Application configuration is a great way to bootstrap our application with log levels suitable to the
@@ -440,18 +443,18 @@ change a level at runtime.
 
 > __Good Design Rule:__  being able to alter log levels at run time, avoids the tempatation to set them too verbosely.
  
-We achieve this with the [LoggerRegistry](https://github.com/craigparra/alt-logger/blob/master/LoggerRegistry.js), which
+We achieve this with the [LoggerCategoryCache](https://github.com/craigparra/alt-logger/blob/master/LoggerCategoryCache.js), which
 the `ConfigurableLogger` uses as a runtime cache, after it has initally loaded the level for a given logger category.
-The `LoggerRegistry` can then be manipulated to alter the log level of a category by some means, for example 
+The `LoggerCategoryCache` can then be manipulated to alter the log level of a category by some means, for example 
 programatically in a test suite.
 
-The `LoggerFactory` creates a static `LoggerRegistry` instance by default, which is okay in lieu of a better way to do 
+The `LoggerFactory` creates a static `LoggerCategoryCache` instance by default, which is okay in lieu of a better way to do 
 this, like dependency injection.
 
 It doesn't get much lighter-weight than this.
 
 ```javascript
-module.exports = class LoggerRegistry {
+module.exports = class LoggerCategoryCache {
   constructor() {
     this.cache = {};
   }

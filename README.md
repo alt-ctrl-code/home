@@ -3,8 +3,10 @@
 
 <a name="jsdnd">JavaScript Design and Development</a>
 -----------------------------------------------------
-A guided design and development exercise in _plain old_ JavaScript
+
+A guided design and development exercise in _plain old_ JavaScript.
 # Contents
+1. [Introduction](#intro)
 1. [Audience](#audience)
 2. [Some History](#history)
 3. [Why The History Matters](#javascriptmatters)
@@ -12,6 +14,32 @@ A guided design and development exercise in _plain old_ JavaScript
     1. [Module 1 Package Hygience](https://github.com/craigparra/alt-package-conventions#readme)
     1. [Module 2 Logging](./LOGGING.md)
     1. Module 3 Configuration
+
+<a name="intro">Introduction</a>
+--------------------------------
+
+It's easy to think of the internet as outside of us, but nothing is performed 
+outside of its a cultural and political context, and software design is no exception, so I give you the following.
+
+### Acknowledgement of Country
+
+I acknowledge and pay my respect to the Elders past and present, to those
+who have passed before us and to the members of the Aboriginal and Torres Strait Islander
+community. I acknowledge the Yamatji and Noongar Peoples, the traditional custodians of the country 
+I was born in, laterly raised in, and share the pride of being from.  I also acknowledge the Turrbal and Yuggera Peoples, 
+the traditional custodians of the beautiful country I live, work and prepare this material in today
+
+I endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations Voice in 
+our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing,  for Australians and all other first nations people in the 
+their lands around the world.
+
+### Statement of Inclusion
+
+I acknowledge that discriminition and inequity persist and pervade our lives and work, and that for some this is uncomfortable and ever present.
+
+In the spirit on inclusion, I state that all are welcome here, my prefered pronouns are his/him. 
+
+With that said, I hope you enjoy, and get some value, from the work.
 
 <a name="audience">Audience</a>
 -------------------------------
@@ -29,7 +57,10 @@ learn a trick or two.
 > can save you from yourself, and besides, if you are using eslint, mocha and nyc _as you should be_, then your 
 > JavaScript is safe.
 >
-> We’re not saying don’t use TypeScript, it’s great, only that learning in the lingua franca will make your TypeScript
+> TypeScript is, at best, thought of as a bridging technology for .NET and Java developers, but I fear that at worst,
+>  it's another cynical attempt by Microsoft to colonise the internet (remember VBScript).
+> 
+> I'm not saying don’t use TypeScript, it's great, only that learning in the internet's native language will make your TypeScript
 > all the better.
 
 <a name="history">Some History</a>

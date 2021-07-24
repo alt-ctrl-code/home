@@ -24,11 +24,12 @@ My first object-oriented language was the [TOOL (Transaction Object Oriented Lan
 that shipped with Forte 4GL.  It supported source control, embedded (inline) SQL, remote singletons (service objects), 
  distributed events and cross-platform client-server applications straight out of the box. It was pretty cool, until Sun Microsystems acquired and sunk it.
 
-For this, and no sensible other reason, I still hate on Java and all things JEE.  The [Spring Framework](https://spring.io/projects/spring-framework) saved Java from 
-itself, and handed me back the familiar design paradigm I had before, but with too much XML.
+For this, and no sensible other reason, I am and always have been a reluctant Java and JEE programmer.  [Spring Framework](https://spring.io/projects/spring-framework) 
+and [Groovy](https://groovy-lang.org/) saved Java from 
+itself, and handed me back the application design fluency to which I was accustomed, _but with too much XML_.
 
-My language of choice for many years was Groovy, because closures and duck-typing proved beyond measure that
-the benefit of static typing is mostly a lie perpetrated by non-functional developers who don't write tests.
+My language of choice for many years has been Groovy, because closures and duck-typing proved beyond measure that
+the benefit of static typing is mostly a lie perpetrated by conservative developers who don't write tests.
 
 JavaScript has replaced Groovy as my first language (sorry Groovy, I still love you), because:
 - its an open standard,
@@ -37,7 +38,8 @@ JavaScript has replaced Groovy as my first language (sorry Groovy, I still love 
 - its duck-typed,
 - its cross-platform.
 
-I also have a meaningful life outside software.  I love my dog, but am and always have been a cat person.
+I also have a meaningful life outside of software design.  I love my wife and kids and dog, but am and always have been a cat person,
+and an anarchist (with a lower-case "a").
 
 You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, craigparra+alt-javascript is preferred.
 

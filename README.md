@@ -44,7 +44,7 @@ can balance the scale soon. In the spirit on inclusion, all are safe and welcome
 If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
 , I  link a short [bio](./BIO.md) 
 
-With all that said, I hope you enjoy and get some value, from the material.
+With all that said, I hope that you enjoy and find value in the material.
 
 <a name="audience">Audience</a>
 -------------------------------

@@ -97,7 +97,7 @@ _and powerful_, now so more than ever.
 
 But many developers, and many _common_ packages  elide the design rigour seen in similar code in Java and C#. It 
 has taken over a decade for native JavaScript frameworks to mature. Ten years later than the same lessons in server-side
-Java and C#.  Much of what you might find in the JavaScript ecosystem today, is _“politely”_ somewhere left of where it
+Java and C#.  Much of what you might find in the JavaScript ecosystem today, is _“politely”_ somewhere to the right of where it
 needs to be (assuming left is good, right?).
 
 This material applies common programming and architecture patterns, to make your JavaScript better &ndash; because when

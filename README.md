@@ -11,14 +11,14 @@ A guided design and development exercise in _plain old_ JavaScript.
 2. [Some History](#history)
 3. [Why The History Matters](#javascriptmatters)
 4. [Structure](#structure)
-    1. [Module 1 Package Hygience](https://github.com/craigparra/alt-package-conventions#readme)
+    1. [Module 1 Package Hygiene](https://github.com/craigparra/alt-package-conventions)
     1. [Module 2 Logging](./LOGGING.md)
     1. Module 3 Configuration
 
 <a name="intro">Introduction</a>
 --------------------------------
 
-It's easy to think of the internet as outside of us, but nothing is performed 
+It's easy to think of the internet as out there, but nothing is performed 
 outside of its a cultural and political context, and software design is no exception, so I give you the following.
 
 ### Acknowledgement of Country
@@ -26,20 +26,25 @@ outside of its a cultural and political context, and software design is no excep
 I acknowledge and pay my respect to the Elders past and present, to those
 who have passed before us and to the members of the Aboriginal and Torres Strait Islander
 community. I acknowledge the Yamatji and Noongar Peoples, the traditional custodians of the country 
-I was born in, laterly raised in, and share the pride of being from.  I also acknowledge the Turrbal and Yuggera Peoples, 
-the traditional custodians of the beautiful country I live, work and prepare this material in today
+I was born to, laterly raised in, and share the pride of being from.  I also acknowledge the Turrbal and Yuggera Peoples, 
+the traditional custodians of the beautiful city I live, work and prepare this material in.
 
-I endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations Voice in 
-our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing,  for Australians and all other first nations people in the 
-their lands around the world.
+I endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations 
+Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
+and all other first nations people in the their lands around the world.
 
-### Statement of Inclusion
+### A Safe Place
 
-I acknowledge that discriminition and inequity persist and pervade our lives and work, and that for some this is uncomfortable and ever present.
+I acknowledge that discrimination and bias persist and pervade, and that the software community continues to be more
+difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 
+Second Language [ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language), and for our "offshore" cohorts.
 
-In the spirit on inclusion, I state that all are welcome here, my prefered pronouns are his/him. 
+I acknowledge my privilege in the community as an ("onshore", monolingual) elder, white male, and live in hope that we 
+can balance the scale soon. In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him. 
+If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
+, I  link a short [bio](./BIO.md) 
 
-With that said, I hope you enjoy, and get some value, from the work.
+With all that said, I hope you enjoy and get some value, from the material.
 
 <a name="audience">Audience</a>
 -------------------------------
@@ -53,15 +58,18 @@ you adopt TDD, linting and so on, and the concepts escalate quickly.  Suspend yo
 learn a trick or two.
 
 > A word on __TypeScript__ : this material is deliberately about JavaScript.
+>
+> At best, TypeScript should be thought of as a bridging technology for .NET and Java developers.  At worst, I worry
+> it's just another cynical, but far more sophisticated, attempt by Microsoft to colonise the internet again
+> (remember [VBScript](https://en.wikipedia.org/wiki/VBScript))
+> 
 > TypeScript is a superset of JavaScript, meaning all the devils are lurking there &ndash; no amount of static typing 
 > can save you from yourself, and besides, if you are using eslint, mocha and nyc _as you should be_, then your 
 > JavaScript is safe.
 >
-> TypeScript is, at best, thought of as a bridging technology for .NET and Java developers, but I fear that at worst,
->  it's another cynical attempt by Microsoft to colonise the internet (remember VBScript).
-> 
-> I'm not saying don’t use TypeScript, it's great, only that learning in the internet's native language will make your TypeScript
-> all the better.
+> I'm not saying don’t use TypeScript, if you have to, only that you don't need it, and learning in the internet's first
+> language will make your TypeScript all the better.
+>
 
 <a name="history">Some History</a>
 ----------------------------------------

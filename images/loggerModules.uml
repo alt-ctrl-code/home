@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JavaScript-modules-diagram</ID>
+  <OriginalElement>C:/usr/src/alt-logger/WinstonLogger.js;C:/usr/src/alt-logger/PlainTextFormatter.js;C:/usr/src/alt-logger/LoggerLevel.js;C:/usr/src/alt-logger/LoggerCategoryCache.js;C:/usr/src/alt-logger/Logger.js;C:/usr/src/alt-logger/JSONFormatter.js;C:/usr/src/alt-logger/DelegatingLogger.js;C:/usr/src/alt-logger/ConsoleLogger.js;C:/usr/src/alt-logger/ConfigurableLogger.js;C:/usr/src/alt-logger/CachingConsole.js;C:/usr/src/alt-logger/LoggerFactory.js;</OriginalElement>
+  <nodes>
+    <node x="358.89480874316945" y="176.03688524590154">C:/usr/src/alt-logger/ConfigurableLogger.js#DelegatingLogger#6;C:/usr/src/alt-logger/ConfigurableLogger.js#Logger#62;</node>
+    <node x="374.3948087431694" y="542.0122950819672">C:/usr/src/alt-logger/ConsoleLogger.js#JSONFormatter#88;C:/usr/src/alt-logger/ConsoleLogger.js#Logger#6;C:/usr/src/alt-logger/ConsoleLogger.js#LoggerLevel#42;</node>
+    <node x="365.3948087431694" y="63.154371584699454">C:/usr/src/alt-logger/DelegatingLogger.js</node>
+    <node x="701.8647540983607" y="665.4986338797814">C:/usr/src/alt-logger/JSONFormatter.js#_#6;</node>
+    <node x="93.08879781420762" y="357.21994535519127">C:/usr/src/alt-logger/Logger.js#LoggerLevel#6;</node>
+    <node x="680.8647540983607" y="398.516393442623">C:/usr/src/alt-logger/LoggerCategoryCache.js</node>
+    <node x="376.8948087431694" y="326.02459016393436">C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;</node>
+    <node x="77.58879781420762" y="579.6939890710382">C:/usr/src/alt-logger/LoggerLevel.js</node>
+    <node x="680.8647540983607" y="509.6762295081968">C:/usr/src/alt-logger/PlainTextFormatter.js</node>
+    <node x="-255.37431693989072" y="545.1939890710382">C:/usr/src/alt-logger/WinstonLogger.js#Logger#35;C:/usr/src/alt-logger/WinstonLogger.js#LoggerLevel#71;C:/usr/src/alt-logger/WinstonLogger.js#_#6;</node>
+    <node x="-178.37431693989072" y="677.9986338797814">lodash</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;" target="C:/usr/src/alt-logger/ConfigurableLogger.js#DelegatingLogger#6;C:/usr/src/alt-logger/ConfigurableLogger.js#Logger#62;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/ConsoleLogger.js#JSONFormatter#88;C:/usr/src/alt-logger/ConsoleLogger.js#Logger#6;C:/usr/src/alt-logger/ConsoleLogger.js#LoggerLevel#42;" target="C:/usr/src/alt-logger/JSONFormatter.js#_#6;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/ConsoleLogger.js#JSONFormatter#88;C:/usr/src/alt-logger/ConsoleLogger.js#Logger#6;C:/usr/src/alt-logger/ConsoleLogger.js#LoggerLevel#42;" target="C:/usr/src/alt-logger/LoggerLevel.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/ConfigurableLogger.js#DelegatingLogger#6;C:/usr/src/alt-logger/ConfigurableLogger.js#Logger#62;" target="C:/usr/src/alt-logger/Logger.js#LoggerLevel#6;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/WinstonLogger.js#Logger#35;C:/usr/src/alt-logger/WinstonLogger.js#LoggerLevel#71;C:/usr/src/alt-logger/WinstonLogger.js#_#6;" target="lodash" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/ConfigurableLogger.js#DelegatingLogger#6;C:/usr/src/alt-logger/ConfigurableLogger.js#Logger#62;" target="C:/usr/src/alt-logger/DelegatingLogger.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;" target="C:/usr/src/alt-logger/ConsoleLogger.js#JSONFormatter#88;C:/usr/src/alt-logger/ConsoleLogger.js#Logger#6;C:/usr/src/alt-logger/ConsoleLogger.js#LoggerLevel#42;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/WinstonLogger.js#Logger#35;C:/usr/src/alt-logger/WinstonLogger.js#LoggerLevel#71;C:/usr/src/alt-logger/WinstonLogger.js#_#6;" target="C:/usr/src/alt-logger/Logger.js#LoggerLevel#6;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;" target="C:/usr/src/alt-logger/JSONFormatter.js#_#6;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/Logger.js#LoggerLevel#6;" target="C:/usr/src/alt-logger/LoggerLevel.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;" target="C:/usr/src/alt-logger/LoggerCategoryCache.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/ConsoleLogger.js#JSONFormatter#88;C:/usr/src/alt-logger/ConsoleLogger.js#Logger#6;C:/usr/src/alt-logger/ConsoleLogger.js#LoggerLevel#42;" target="C:/usr/src/alt-logger/Logger.js#LoggerLevel#6;" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/JSONFormatter.js#_#6;" target="lodash" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/WinstonLogger.js#Logger#35;C:/usr/src/alt-logger/WinstonLogger.js#LoggerLevel#71;C:/usr/src/alt-logger/WinstonLogger.js#_#6;" target="C:/usr/src/alt-logger/LoggerLevel.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="C:/usr/src/alt-logger/LoggerFactory.js#ConfigurableLogger#6;C:/usr/src/alt-logger/LoggerFactory.js#ConsoleLogger#66;C:/usr/src/alt-logger/LoggerFactory.js#JSONFormatter#178;C:/usr/src/alt-logger/LoggerFactory.js#LoggerCategoryCache#116;C:/usr/src/alt-logger/LoggerFactory.js#PlainTextFormatter#228;" target="C:/usr/src/alt-logger/PlainTextFormatter.js" relationship="">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Custom" zoom="0.954367666232073" showDependencies="false" x="438.5" y="373.5" />
+  <SelectedNodes>
+    <node>C:/usr/src/alt-logger/LoggerCategoryCache.js</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>All</Category>
+  </Categories>
+  <VISIBILITY>Details</VISIBILITY>
+</Diagram>
+

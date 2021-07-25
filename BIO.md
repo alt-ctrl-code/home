@@ -38,8 +38,9 @@ JavaScript has replaced Groovy as my first language (sorry Groovy, I still love 
 - its duck-typed,
 - its cross-platform.
 
-I also have a meaningful life outside of software design.  I love my wife and kids.  I love my dog, but am and always have been a cat person.
-I vote green and left, and have always been an anarchist (with a lower-case "a").
+I also have a meaningful life outside of software design.  I love my wife and kids.  I love my dog, but am and always 
+have been a cat person. I do [book club](https://toughguybookclub.com/) the first Wednesday each month,
+vote green and left, and have always been an anarchist (with a lower-case "a").
 
 You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, craigparra+alt-javascript is preferred.
 

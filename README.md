@@ -39,8 +39,8 @@ I acknowledge that discrimination and harassment persist and pervade, and that t
 difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 
 Second Language ([ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language)), and for our "offshore" cohorts.
 
-I acknowledge my privilege in the community as an ("onshore", monolingual) elder, white male, and live in hope that we 
-can balance the scale soon. In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him. 
+I acknowledge my privilege in the community as an ("onshore", monolingual) elder, white male, and work to balance the scale.
+In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him. 
 If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
 , I  link a short [bio](./BIO.md) 
 

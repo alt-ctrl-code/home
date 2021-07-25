@@ -48,7 +48,7 @@ With all that said, I hope that you enjoy and find value in the material.
 
 <a name="audience">Audience</a>
 -------------------------------
-The @alt-javascript material is meant for  JavaScript developers of all levels, junior and “senior”, fresh and 
+The @alt-javascript material is meant for JavaScript developers of all levels, junior and “senior”, fresh and 
 not-so-fresh.   It assumes at least some level of familiarity with node.js and the developer stack such as mocha, 
 eslint and nyc, and though it doesn't cover using those tools directly, the material does refer to and include them from
 time to time.   

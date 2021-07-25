@@ -24,7 +24,7 @@ My first object-oriented language was the [TOOL (Transaction Object Oriented Lan
 that shipped with Forte 4GL.  It supported source control, embedded (inline) SQL, remote singletons (service objects), 
  distributed events and cross-platform client-server applications straight out of the box. It was pretty cool, until Sun Microsystems acquired and sunk it.
 
-For this, and no sensible other reason, I am and always have been a reluctant Java and JEE programmer.  [Spring Framework](https://spring.io/projects/spring-framework) 
+For this, and no other sensible reason, I am and always have been a reluctant Java and JEE programmer.  [Spring Framework](https://spring.io/projects/spring-framework) 
 and [Groovy](https://groovy-lang.org/) saved Java from 
 itself, and handed me back the application design fluency to which I was accustomed, _but with too much XML_.
 
@@ -39,8 +39,8 @@ JavaScript has replaced Groovy as my first language (sorry Groovy, I still love 
 - its cross-platform,
 - its not owned by the cadre of big tech; Google, Apple, Microsoft, or Oracle.
 
-I also have a meaningful life outside of software design.  I love my wife and kids.  I love my dog, but am and always 
-have been a cat person. I do [book club](https://toughguybookclub.com/) the first Wednesday each month,
+I  have a meaningful life outside of software design.  I love time with my wife and kids.  I love my dog, but am and always 
+have been a cat person. I do [book club](https://toughguybookclub.com/) the first Wednesday each month, strength train,
 vote green and left, and have always been an anarchist (with a lower-case "a").
 
 You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, craigparra+alt-javascript is preferred.

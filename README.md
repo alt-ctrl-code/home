@@ -33,7 +33,7 @@ I endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and
 Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
 and all other first nations people in the their lands around the world.
 
-### A Safe Place
+### A Safe Space
 
 I acknowledge that discrimination and harassment persist and pervade, and that the software community continues to be more
 difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 

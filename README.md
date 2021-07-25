@@ -59,15 +59,16 @@ learn a trick or two.
 
 > A word on __TypeScript__ : this material is deliberately about JavaScript.
 >
-> At best, TypeScript should be thought of as a bridging technology for .NET and Java developers.  At worst, I worry
-> it's just another cynical, but far more sophisticated, attempt by Microsoft to colonise the internet again
+> At best, TypeScript should be thought of as a bridging technology for C# and Java developers.  At worst, 
+> another sophisticated attempt by Microsoft to colonise the internet, _along with vscode_
 > (remember [VBScript](https://en.wikipedia.org/wiki/VBScript))
 > 
 > TypeScript is a superset of JavaScript, meaning all the devils are lurking there &ndash; no amount of static typing 
 > can save you from yourself, and besides, if you are using eslint, mocha and nyc _as you should be_, then your 
 > JavaScript is safe.
 >
-> I'm not saying don’t use TypeScript, if you have to, only that you don't need it, and learning in the internet's first
+> I'm not saying don’t use TypeScript, if you must, only that the choice to use it is as political as it is technical, and  
+> I choose JavaScript &ndash; you don't need TypeScript, and learning in the internet's first
 > language will make your TypeScript all the better.
 >
 

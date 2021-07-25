@@ -36,7 +36,8 @@ JavaScript has replaced Groovy as my first language (sorry Groovy, I still love 
 - its isomorphic,
 - its functional,
 - its duck-typed,
-- its cross-platform.
+- its cross-platform,
+- its not owned by the cadre of big tech; Google, Apple, Microsoft, or Oracle.
 
 I also have a meaningful life outside of software design.  I love my wife and kids.  I love my dog, but am and always 
 have been a cat person. I do [book club](https://toughguybookclub.com/) the first Wednesday each month,

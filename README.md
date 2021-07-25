@@ -67,8 +67,8 @@ learn a trick or two.
 > can save you from yourself, and besides, if you are using eslint, mocha and nyc _as you should be_, then your 
 > JavaScript is safe, and your tests will express your design intent stronger than types.
 >
-> I'm not saying don’t use TypeScript, if you must, only that the choice to use it is as political as it is technical, and  
-> I choose JavaScript &ndash; you don't need TypeScript, and learning in the internet's first
+> I'm not saying don’t use TypeScript, if you must, only that the choice to use it is as political as it is technical, 
+> and I choose JavaScript &ndash; you don't need TypeScript, and learning in the internet's first
 > language will make your TypeScript all the better.
 >
 

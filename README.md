@@ -31,10 +31,6 @@ who have passed before us and to the members of the Aboriginal and Torres Strait
 community. I acknowledge the Turrbal and Yuggera Peoples, the traditional custodians of the beautiful city I live, 
 work and prepare this material in.
 
-I also endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations 
-Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
-and all other first nations people in the their lands around the world.
-
 ### A Safe Space
 
 I acknowledge that discrimination and harassment persist and pervade, and that the software community continues to be more

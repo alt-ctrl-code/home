@@ -43,6 +43,10 @@ I  have a meaningful life outside of software design.  I love time with my wife 
 have been a cat person. I do [book club](https://toughguybookclub.com/) the first Wednesday each month, strength train,
 vote green and left, and have always been an anarchist (with a lower-case "a").
 
+I support the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations
+Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
+and all other first nations people in the their lands around the world.
+
 You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, craigparra+alt-javascript is preferred.
 
 

@@ -18,8 +18,9 @@ A guided design and development exercise in _plain old_ JavaScript.
 <a name="intro">Introduction</a>
 --------------------------------
 
-It's easy to think of the internet as out there, but nothing is performed 
-outside of its a cultural and political context, and software design is no exception, so I give you the following.
+It's easy to think of the internet as not being grounded anywhere, but nothing is performed 
+outside of its a cultural and political context, and software design is no exception, so I offder you the following
+two expectationsetting sections, before we get into the main part of the material.
 
 ### Acknowledgement of Country
 

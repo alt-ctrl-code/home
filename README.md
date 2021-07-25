@@ -35,7 +35,7 @@ and all other first nations people in the their lands around the world.
 
 ### A Safe Place
 
-I acknowledge that discrimination and harrassment persist and pervade, and that the software community continues to be more
+I acknowledge that discrimination and harassment persist and pervade, and that the software community continues to be more
 difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 
 Second Language ([ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language)), and for our "offshore" cohorts.
 

@@ -28,11 +28,10 @@ I live and work in Australia, and "down here", it’s important to us that we le
 
 I acknowledge and pay my respect to the Elders past and present, to those
 who have passed before us and to the members of the Aboriginal and Torres Strait Islander
-community. I acknowledge the Yamatji and Noongar Peoples, the traditional custodians of the country 
-I was born to, laterly raised in, and share the pride of being from.  I also acknowledge the Turrbal and Yuggera Peoples, 
-the traditional custodians of the beautiful city I live, work and prepare this material in.
+community. I acknowledge the Turrbal and Yuggera Peoples, the traditional custodians of the beautiful city I live, 
+work and prepare this material in.
 
-I endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations 
+I also endorse the [Uluru Statement from the Heart](https://ulurustatement.org/), and it's goal to enshrine a First Nations 
 Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
 and all other first nations people in the their lands around the world.
 

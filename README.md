@@ -37,7 +37,7 @@ and all other first nations people in the their lands around the world.
 
 I acknowledge that discrimination and harrassment persist and pervade, and that the software community continues to be more
 difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 
-Second Language [ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language), and for our "offshore" cohorts.
+Second Language ([ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language)), and for our "offshore" cohorts.
 
 I acknowledge my privilege in the community as an ("onshore", monolingual) elder, white male, and live in hope that we 
 can balance the scale soon. In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him. 

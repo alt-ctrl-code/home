@@ -80,26 +80,29 @@ including _local development and testing_.
 From our definition, we said application configuration is static or immutable contextual information that is provided on
 application bootstrap. So it follows that updating system parameters after bootstrap is _no longer the concern of your 
 application configuration design_. Said differently, configuration is by definition &ndash; _not dynamic_. So it follows 
-that it's a good design rule to separate initial bootstrap configuration from any runtime updates to dynamic application service flags and parameters.
+that it's a good design rule to separate initial bootstrap configuration from any runtime updates to dynamic application 
+flags and parameters.
 
 > __Good Design Rule:__  separate initial bootstrap configuration from runtime updates to dynamic application service 
 > flags or parameters.
 
-A good pattern is to fetch and set initial application service  parameter values from the application configuration 
-facade, rather than fetching directly from the config each time. The use of the 
+The use of the
 [LoggerRegistry](https://github.com/craigparra/alt-logger/blob/master/LoggerRegistry.js) by the `LoggerFactory` in the
-[Logging](./LOGGING.md) trail is a good example of this separation; if the `ConfigurableLogger` were to rely on the 
-immutable configuration values, we would not be able to alter our logger category levels at run time, which we 
+[Logging](./LOGGING.md) trail is a good example of this separation; if the `ConfigurableLogger` were to rely on the
+immutable configuration values, we would not be able to alter our logger category levels at run time, which we
 definitely want to do.
 
-> __Good Design Rule:__  fetch and set initial application service parameter values from the application configuration facade, 
-> rather than fetching directly from the facade each and every time.
+More generally speaking, it is also a good pattern to fetch and set initial application parameter values only one-time
+from the application configuration facade, rather than in-line fetching from the config facade every time they are used. 
+
+> __Good Design Rule:__  fetch and set initial application parameter values from the application configuration facade, 
+> rather than inline fetching from the facade each and every time.
 
 Note, and this is _important_, a fetch and set pattern (as described above) does not dictate _how_ you achieve those 
 dynamic updates, and it is _not the concern of your application configuration design_.  Polling Launch Darkly, or some 
 other configuration service, or exposing an API interface to tweak a system parameter are user stories with complex 
 application integration patterns, all of which increase the entropy of your application architecture, and the 
-complexity of your human operational interface (e.g., where do I go to increase logs level again?).
+complexity of your human operational interface.
 
 They sure are cool and super-interesting concerns, but let's park them for later.
 
@@ -150,18 +153,33 @@ environment variables as application configuration.
 
 > __Good Design Rule:__  mostly, avoid injecting environment variables as application configuration.
 
+
+Because env vars touch on this very important, and common problem, topic I’ll cover now it now: it’s a good 
+_organisational_ design rule to combine operations with development – it is the very definition of devops, more essential
+and than merely adopting “infrastructure as code”.  It's what I might mean if I ever used the phrase “full-stack”, which 
+is a non-sense term for too many reasons to cover here.
+
+> __Good Design Rule:__  combining operations with development, in a _true_ devops organisational model delivers
+> more flexible and scalable applications, more efficiently and more effectively.
+
+Broadly speaking, if your operational environment’s security context is insistent on a “separation of authority” between
+operations and development, it is likely to limit your local deployment flexibility, but even so, good application design 
+can mitigate this, which I will demonstrate eventually.
+
 ### Input / Output
 
 Since, as a rule, it’s good design practice to minimise the use of command line arguments and environment variables, 
 we are left with the Node.js I/O facilities to load application configuration from the file system or network interfaces.
+
+
 Since for the purpose of this module, we have constrained our definition of application configuration to _static or 
 immutable_ contextual information provided on application bootstrap, and the _network_ is rarely either of those, it 
-follows that is is a good design not to get application configuration from the file system (and in fact, your 
-application file bundle)
+follows that is is a good design to get application configuration from the file system (ideally your 
+application bundle)
 
-> __Good Design Rule:__  inject configuration from files bundled with your application.
+> __Good Design Rule:__  inject configuration from read-only files bundled with your application.
 
-<a name="constants">The Word on CONSTANTS</a>
+<a name="constants">The _Word_ on CONSTANTS</a>
 ---------------------------------------------
 
 Now, before we get into the weeds with modules, lets just have _the word_ on `CONSTANTS`. Configuration and constants 
@@ -174,8 +192,8 @@ const constants = {};
 constants.ENV = process.env.NODE_ENV; // is a smell, say no more
 ```
 
-Apart from the obvious, that the `ENV` property is not in fact a `const` (noting that JavaScript doesn't cater well for 
-class constants (yet) and we adopt `UPPER_SNAKE_CASE` as a well understood convention to indicate constancy instead),
+Noting that JavaScript doesn't cater well for object constants and we adopt `UPPER_SNAKE_CASE` as a well understood 
+convention to indicate constancy instead, then apart from the obvious, that the `ENV` property is not in fact a `const` (),
 the `process.env.NODE_ENV` is by definition, essentially a variable, constant only in the lifetime or scope of an
 application's deployment context.
 
@@ -194,17 +212,22 @@ const {c,G} = require ('PhysicalConstants');
 <a name="jscondig">Common Configuration Modules</a>
 -------------------------------------
 
-### dotenv and dotenv-expand
+### dotenv 
 
-The JavaScript open-source community provides the popular [dotenv](https://www.npmjs.com/package/dotenv) packages for 
+The JavaScript open-source community provides the popular [dotenv](https://www.npmjs.com/package/dotenv) package for 
 locally managing application configuration provided as environment variables. On the basis that the only application configuration that 
 should be injected into your application from outside should be the unique handle of the deployment (via NODE_ENV) , 
-it follows that it is also a good design rule to aver the need for and use of dotenv and related `.env` files that are 
-uncontrolled via `.gitignore`.
+it follows that it is also a good design rule to aver the need for and use of dotenv and related `.env` files.
 
 We're not saying dotenv isn't great, it is &ndash; just that avoiding environment variables negates the need for it.
 
 > __Good Design Rule:__  aver thus use of dotenv, if you can avoid the use of env vars.
+
+
+By design, dotenv files are also not intended to be source controlled (via .gitignore), requiring the developer to 
+manually intervene to get things running in local-development, which is bad.
+
+> __Good Design Rule:__  avoid any manual set up or intervention especially in local-development.
 
 ### [node-]config
 

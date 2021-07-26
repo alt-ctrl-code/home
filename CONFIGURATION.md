@@ -129,7 +129,7 @@ fundamental ways it exposes immediate “system” context information passed in
 
 We'll  address node.js here, and defer the browser for later.
 
-### command-line arguments
+### Command-Line Arguments
 
 The node runtime provides the process object, which exposes the `process.argv` array with the command-line parameters 
 provided, including the executable, the target script and then trailing parameters as so.

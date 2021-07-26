@@ -13,20 +13,20 @@ A guided design and development exercise in _plain old_ JavaScript.
 4. [Structure](#structure)
     1. [Module 1 Package Hygiene](https://github.com/craigparra/alt-package-conventions)
     1. [Module 2 Logging](./LOGGING.md)
-    1. Module 3 Configuration
+    1. [Module 3 Configuration](./CONFIGURATION.md)
 
 <a name="intro">Introduction</a>
 --------------------------------
 
 It's easy to think of the internet as not being grounded anywhere, but nothing is performed 
-outside of its a cultural and political context, and software design is no exception, so I offder you the following
-two expectationsetting sections, before we get into the main part of the material.
+outside of its a cultural and political context, and software design is no exception, so I off er you the following
+two expectation setting sections, before we get into the main part of the material.
 
-I live and work in Australia, and "down here", it’s important to us that we lead with this.
+I live and work in Australia, where "down here", it’s common to lead with an acknowledgement of country.
 
 ### Acknowledgement of Country
 
-I acknowledge and pay my respect to the Elders past and present, to those
+I also acknowledge and pay my respect to the Elders past and present, to those
 who have passed before us and to the members of the Aboriginal and Torres Strait Islander
 community. I acknowledge the Turrbal and Yuggera Peoples, the traditional custodians of the beautiful city I live, 
 work and prepare this material in.

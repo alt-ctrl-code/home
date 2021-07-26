@@ -260,4 +260,5 @@ especially one that uses whitespace as a scope discriminator.
 The `config` package is great out of the box, and we could just stop here, but there is a couple of features it lacks, 
 which we will design and extend.  
 
-### <a name="extending">Extending Config</a>
+<a name="extending">Extending Config</a>
+---------------------------------------

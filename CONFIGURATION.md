@@ -4,6 +4,17 @@
 This material extends the excellent [config](https://www.npmjs.com/package/config) package, 
 adding some utility features with a simple wrapping facade, guided by good design rules and architecture principles.
 
+# Contents
+1. [Not A Separate Concern](#notseparate)
+1. [Nothing Left Outside](#nothingoutside)
+1. [Not As A Service](#notaservice)
+1. [Dynamic Configuration, Is No Such _Thing_](#notdynamic)
+1. [JavaScript Configuration](#jsconfig)
+1. [The _Word_ on CONSTANTS](#constants)
+1. [Common Configuration Modules](#constants)
+   1. [dotenv](#dotenv)
+   1. [config](#config)
+
 <a name="notseparate">Not A Separate Concern</a>
 -----------------------------------------------
 
@@ -33,7 +44,6 @@ code changes, and should be promoted through the build, test and deployment cycl
 configuration, either manually or automatically, on a lifecycle outside of your application code lifecycle, 
 introduces complexity and risk and reduces the testability and flexibility of your possible deployment configurations, 
 especially to the local developer (who needs it the most).
-
 
 <a name="nothingoutside">Nothing Left Outside</a>
 ------------------------------------------------
@@ -74,7 +84,7 @@ including _local development and testing_.
 > __Good Design Rule:__  _do not_ manage your application configuration as a separate external service. Because 
 > _accidental complexity_.
 
-<a name="not dynamic">Dynamic Configuration, Is No Such _Thing_</a>
+<a name="notdynamic">Dynamic Configuration, Is No Such _Thing_</a>
 ------------------------------------------------------------------
 
 From our definition, we said application configuration is static or immutable contextual information that is provided on
@@ -106,7 +116,7 @@ complexity of your human operational interface.
 
 They sure are cool and super-interesting concerns, but let's park them for later.
 
-<a name="jscondig">JavaScript Configuration</a>
+<a name="jsconfig">JavaScript Configuration</a>
 -----------------------------------------------
 
 JavaScript offers various options for injecting application configuration from “outside”. Browsers provide the 
@@ -212,7 +222,7 @@ const {c,G} = require ('PhysicalConstants');
 <a name="jscondig">Common Configuration Modules</a>
 -------------------------------------
 
-### dotenv 
+### <a name="dotenv">dotenv</a>
 
 The JavaScript open-source community provides the popular [dotenv](https://www.npmjs.com/package/dotenv) package for 
 locally managing application configuration provided as environment variables. On the basis that the only application configuration that 
@@ -229,7 +239,7 @@ manually intervene to get things running in local-development, which is bad.
 
 > __Good Design Rule:__  avoid any manual set up or intervention especially in local-development.
 
-### [node-]config
+### <a name="config">config</a>
 
 The JavaScript open-source community also provides the excellent [config](https://www.npmjs.com/package/config) package 
 for managing application configuration. As with the [logging](./LOGGING.md) material, it is a good design rule to 

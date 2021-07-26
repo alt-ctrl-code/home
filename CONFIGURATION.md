@@ -240,10 +240,12 @@ encapsulating common good design features.
 
 It is a good design rule to use the [config](https://www.npmjs.com/package/config)  package façade to isolate all 
 configuration, and aver the use of `.env` files in favour of a `config/local-development.json` file. It is also good 
-design rule to use JSON as the format, rather than .js or .yml (yes, yaml). Executable configuration and deferred evaluation at bootstrap are just bad in principle, and we don’t need yet another lazy markup syntax, especially one that uses whitespace as a scope discriminator.
+design rule to use JSON as the format, rather than .js or .yml (yes, yaml). Executable configuration and deferred 
+evaluation at bootstrap are just bad in principle, and we don’t need yet another lazy markup syntax, 
+especially one that uses whitespace as a scope discriminator.
 
 > __Good Design Rule:__ prefer a [config](https://www.npmjs.com/package/config) module `config/local-development.json`, in 
 > JSON over a [dotenv](https://www.npmjs.com/package/dotenv) module `.env` file.
 
-The `config` package is great out of the box, but there is a couple of features it lacks holding it back, which we will
-extend shortly.  
+The `config` package is great out of the box, and we could just stop here, but there is a couple of features it lacks, 
+which we will design and extend.  

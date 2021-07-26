@@ -4,6 +4,16 @@
 This material builds a simple logging façade, for the console (and [winston](https://www.npmjs.com/package/winston))
 , guided by good design rules  and architecture principles.
 
+# Contents
+1. [Why Start With Logging?](#why)
+1. [JavaScript Logging](#jslogging)
+2. [A Simple Console Logger](#consolelogger)
+3. [ConfigurableLogger](#configlogger)
+4. [LoggerFactory](#loggerfactory)
+4. [Testing with CachingConsoleLoggerFactory](#testing)
+
+
+
 <a name="why">Why Start With Logging?</a>
 -------------------------------------------
 When writing application code, it’s a useful if our application code is observable.
@@ -36,7 +46,7 @@ like legal compliance.
 > They might just happen to use a logging façade, in exactly the same way as info logging – but we are not 
 considering these patterns here.
 
-<a name="why">JavaScript Logging</a>
+<a name="jslogging">JavaScript Logging</a>
 ------------------------------------
 
 JavaScript offers various options for logging, and the [@alt-javascript/logger](https://www.npmjs.com/package/@alt-javascript/logger) package in the 
@@ -469,7 +479,7 @@ module.exports = class LoggerCategoryCache {
 };
 ```
 
-<a name="loggerfactory">Testing with the CachingConsoleLoggerFactory</a>
+<a name="testing">Testing with the CachingConsoleLoggerFactory</a>
 ------------------------------------------------------------
 
 Testing logging is hard, unless you have designed it to be testable, and testability should be a first class concern. 

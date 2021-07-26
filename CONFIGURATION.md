@@ -203,7 +203,7 @@ constants.ENV = process.env.NODE_ENV; // is a smell, say no more
 ```
 
 Noting that JavaScript doesn't cater well for object constants and we adopt `UPPER_SNAKE_CASE` as a well understood 
-convention to indicate constancy instead, then apart from the obvious, that the `ENV` property is not in fact a `const` (),
+convention to indicate constancy instead, then apart from the obvious, that the `ENV` property is not in fact a `const`,
 the `process.env.NODE_ENV` is by definition, essentially a variable, constant only in the lifetime or scope of an
 application's deployment context.
 
@@ -259,3 +259,5 @@ especially one that uses whitespace as a scope discriminator.
 
 The `config` package is great out of the box, and we could just stop here, but there is a couple of features it lacks, 
 which we will design and extend.  
+
+### <a name="extending">Extending Config</a>

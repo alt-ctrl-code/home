@@ -98,9 +98,13 @@ Until finally JavaScript eats the world, and is arguably now the de facto  lingu
 <a name="javascriptmatters">Why The History Matters</a>
 ----------------------------------------
 
-With its slacker, [Gen X](https://en.wikipedia.org/wiki/Generation_X) origins in the nineties, JavaScript has always 
-and unfairly been seen as the grunge problem-child of software development. It was deliberately, light weight, flexible 
-_and powerful_, now so more than ever.
+With its slacker origins in the nineties, JavaScript has always and unfairly been seen as the awkward - even dangerous -
+misfit of software development.  So much so, that the inventor of JSON, Douglas Crockford declared it:
+
+>  The world’s most misunderstood programming language.
+
+
+But it was _deliberately_ light weight, flexible _and powerful_, now so more than ever.
 
 But many developers, and many _common_ packages  elide the design rigour seen in similar code in Java and C#. It 
 has taken over a decade for native JavaScript frameworks to mature. Ten years later than the same lessons in server-side

@@ -19,7 +19,7 @@ A guided design and development exercise in _plain old_ JavaScript.
 --------------------------------
 
 It's easy to think of the internet as not being grounded anywhere, but nothing is performed 
-outside of its a cultural and political context, and software design is no exception, so I off er you the following
+outside of its a cultural and political context, and software design is no exception, so I offer you the following
 two expectation setting sections, before we get into the main part of the material.
 
 I live and work in Australia, where "down here", it’s common to lead with an acknowledgement of country.

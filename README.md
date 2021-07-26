@@ -122,4 +122,4 @@ The module application source and packages are provided (and linked) publicly he
 
 - [Module 1 Packaging](https://github.com/craigparra/alt-package-conventions#readme)
 - [Module 2 Logging](./LOGGING.md)
-- Module 3 Configuration
+- [Module 3 Configuration](./CONFIGURATION.md)

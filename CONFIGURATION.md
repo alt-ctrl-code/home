@@ -103,7 +103,7 @@ flags and parameters.
 > flags or parameters.
 
 The use of the
-[LoggerRegistry](https://github.com/craigparra/alt-logger/blob/master/LoggerRegistry.js) by the `LoggerFactory` in the
+[LoggerCategoryCache](https://github.com/craigparra/alt-logger/blob/master/LoggerCategoryCache.js) by the `LoggerFactory` in the
 [Logging](./LOGGING.md) trail is a good example of this separation; if the `ConfigurableLogger` were to rely on the
 immutable configuration values, we would not be able to alter our logger category levels at run time, which we
 definitely want to do.

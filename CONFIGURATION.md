@@ -1,5 +1,5 @@
 <a name="logging">Configuration Design Trail</a>
-=============================
+================================================
 
 This material extends the excellent [config](https://www.npmjs.com/package/config) package, 
 adding some utility features with a simple wrapping facade, guided by good design rules and architecture principles.
@@ -17,6 +17,9 @@ adding some utility features with a simple wrapping facade, guided by good desig
 1. [Scope All Config Values](#scope)
 1. [Extending Config](#extending)
 1. [Variable Expansion](#expansion)
+1. [Decryption](#decrypt)
+1. [Remote Config With Fetch](#fetch)
+1. [ConfigFactory](#factory)
 
 <a name="notseparate">Not A Separate Concern</a>
 -----------------------------------------------
@@ -316,13 +319,15 @@ configuration keys, but config doesn’t seem to support it.
 
 ```json
 {
-" key": "
-"one" : "
-" placeholder": "start.${ nested.two }.
-"nested" :
-"key" : "
-"two" : "
-" placeholder": "start.${ nested.two }.
+   "key": "value",
+   "one" : "one",
+   "placeholder": "start.${one}.${nested.two}.end",
+   "nested" : {
+      "key" : "value",
+      "two" : "two",
+      "placeholder": "start.${one}.${nested.two}.end",
+   }
+}
 ```
 We achieve this by injecting the ValueResolvingConfig , with a Resolver, which will take the value return by the
 delegate, and as a key (or input) into a deterministic process to resolve, transform or mutate to underlying value into a
@@ -332,3 +337,135 @@ changed.
 Here is the PlaceHolderResolver
 
 ![PlaceHolderResolver](./images/PlaceHolderResolver.png)
+
+<a name="decrypt">Decryption</a>
+--------------------------------
+
+Another common utility feature of configuration libraries is decrypting config values encrypted with a passphrase
+maintained outside of the source repository, effectively obfuscating your secret values as below.
+
+```json
+{
+  "placeholderEncrypted": "start.${nested.encrypted}.end",
+  "nested" : {
+     "encrypted" : "enc.pxQ6z9s/LRpGB+4ddJ8bsq8RqELmhVU2"
+  }
+}
+```
+
+It’s a good design rule, in controlled development zones, to use encrypted properties as an effective strategy to have
+your secret keys maintained as source code , and not injected or maintained on a separate deployment lifecycle,
+increasing your deployment complexity.
+
+> __Good Design Rule:__ use encrypted properties as an effective strategy to have your secret keys  maintained 
+> as source code.
+
+
+If you doubt the efficacy of this simple technique, take the (https://github.com/craigparra/alt-config-crypto-challenge)
+
+Here is the `JasyptDecryptor`, which decrypts values encrypted with the jasypt package, taking the passphrase from the
+NODE_CONFIG_PASSPHRASE environment variable.
+
+![](./images/JasyptDecryptor.png)
+
+<a name="fetch">Remote Config With Fetch</a>
+-----------------------------------
+It’s easy to imaging a resolver that uses the fetch api,  but based on our earlier
+words on configuration as a service we don’t encourage it.
+
+That said, we still implemented it for raw utility and config values that start with the prefix `url.` can be 
+fetched and resolved asynchronously with the `fetch` function, and HTTP options can be specified as in the example 
+config file.  To avoid bundling `node-fetch`.
+
+You need to provide it by using `@alt-javascript/boot` to boot it into the global root context, where the package 
+will detect it.
+
+```javascript
+const {boot} = require('@alt-javascript/boot');
+const {config} = require('@alt-javascript/config');
+const fetch = require('node-fetch');
+
+boot({config,fetch})
+const webdata = await config.fetch('pathToUrlPrefixedValue'); 
+```
+
+`local-development.json`
+```json
+{
+  "jsonplaceholder": {
+    "todos": "url.https://jsonplaceholder.typicode.com/todos/1"
+  },
+  "fetchWithOpts" : {
+    "url": "url.https://jsonplaceholder.typicode.com/todos/1",
+    "authorization": "Basic dXNlcjpwYXNz",
+    "method": "get",
+    "body": {},
+    "headers": {"Content-Type": "application/json"}
+  }
+}
+```
+
+
+
+<a name="factory">ConfigFactory</a>
+-----------------------------------
+
+In practice, we really want the ValueResolvingConfig to do all functions, so we chain an array of resolvers in a 
+a `DelegatingResolver`.
+
+```javascript
+const Resolver = require('./Resolver');
+
+module.exports = class DelegatingResolver extends Resolver {
+  constructor(resolvers) {
+    super();
+    this.resolvers = resolvers;
+  }
+
+  resolve(config) {
+    let resolvedConfig = config;
+    for (let i = 0; i < this.resolvers.length; i++) {
+      resolvedConfig = this.resolvers[i].resolve(resolvedConfig);
+    }
+    return resolvedConfig;
+  }
+};
+```
+
+To put it all together we, we create a ConfigFactory to build and inject the complex arrangement of classes, and 
+export it as the regular config package does.
+
+```javascript
+const npmconfig = require('config');
+const ValueResolvingConfig = require('./ValueResolvingConfig');
+const DelegatingResolver = require('./DelegatingResolver');
+const PlaceHolderResolver = require('./PlaceHolderResolver');
+const PlaceHolderSelector = require('./PlaceHolderSelector');
+const JasyptDecryptor = require('./JasyptDecryptor');
+const PrefixSelector = require('./PrefixSelector');
+const URLResolver = require('./URLResolver');
+
+module.exports = class ConfigFactory {
+
+  static detectFetch(fetchArg) {
+    //...
+  }
+
+  static getConfig(config, resolver, fetchArg) {
+    const placeHolderResolver = new PlaceHolderResolver(new PlaceHolderSelector());
+    const jasyptDecryptor = new JasyptDecryptor(new PrefixSelector('enc.'));
+    const urlResolver = new URLResolver(new PrefixSelector('url.'), ConfigFactory.detectFetch(fetchArg));
+    const delegatingResolver = new DelegatingResolver(
+      [placeHolderResolver, jasyptDecryptor, urlResolver],
+    );
+    const valueResolvingConfig = new ValueResolvingConfig(config || npmconfig,
+      resolver || delegatingResolver);
+
+    placeHolderResolver.reference = valueResolvingConfig;
+    return valueResolvingConfig;
+  }
+};
+
+```
+From a user perspective, we get a valuable uplift in features, with latterly no change to our downstream 
+application code.

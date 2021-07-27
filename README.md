@@ -59,7 +59,7 @@ learn a trick or two.
 >
 > At best, TypeScript should be thought of as a bridging technology for C# and Java developers.  At worst, 
 > another sophisticated attempt by Microsoft to colonise the internet, _along with vscode_
-> (remember [VBScript](https://en.wikipedia.org/wiki/VBScript))
+> (we don't need a [VBScript 2.0](https://en.wikipedia.org/wiki/VBScript))
 > 
 > TypeScript is a superset of JavaScript, meaning all the devils are lurking there &ndash; no amount of static typing 
 > can save you from yourself, and besides, if you are using eslint, mocha and nyc _as you should be_, then your 

@@ -83,8 +83,9 @@ Eich was tasked with extending Netscape with a scripting language, and the compa
       
 JavaScript was syntactically similar to, but definitely NOT like, Java the “hot new” programming language also
 released in __1995__, by James Gosling at Sun Microsystems.   Ten years of horse crazy browser side JavaScript ensue, 
-matched only by the ten equal years of bat crazy server side Java and .NET. Browser wars erupt, Weblogic invents the 
-“application server”, Sun invents J2EE (now just EE), Microsoft releases Active this and that, _IBM gets involved_.
+matched only by the ten equal years of bat crazy server side Java and .NET. Browser wars erupt, Sun invents J2EE 
+(now just EE), Weblogic usurps the “application server”,  Microsoft releases Active this and that, _IBM kind of 
+gets involved_.
   
 Then in __2006__, AJAX (Asynchronous JavaScript and XML oh, that) is standardised, and now JavaScript can
 remote. Browser side scripting madness erupts all over again with binding and remoting.

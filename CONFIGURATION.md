@@ -14,6 +14,9 @@ adding some utility features with a simple wrapping facade, guided by good desig
 1. [Common Configuration Modules](#constants)
    1. [dotenv](#dotenv)
    1. [config](#config)
+1. [Scope All Config Values](#scope)
+1. [Extending Config](#extending)
+1. [Variable Expansion](#expansion)
 
 <a name="notseparate">Not A Separate Concern</a>
 -----------------------------------------------
@@ -260,5 +263,72 @@ especially one that uses whitespace as a scope discriminator.
 The `config` package is great out of the box, and we could just stop here, but there is a couple of features it lacks, 
 which we will design and extend.  
 
+### <a name="scope">Scope All Config Values</a>
+
+The node config package supports a hierarchical (dot separated) format for configuration values, and tt is a good design
+rule to always scope your configuration values to avoid naming collisions and conflicts, when applying modular application architectures.
+
+> __Good Design Rule:__ scope your configuration values to avoid naming collisions and conflicts.
+
+The @alt-javascript/logger scopes all it’s configuration under the “logging” configuration path, and is a good example of
+how this rule is applied.
+
+```json
+{
+"logging" :
+"format" : "
+"^^^ set a format to json for JSON output" : doco
+" level":
+"/" : "
+"@alt javascript /config crypto challenge" : "
+"^^^ set a path level to enable log lines at that folder, down to file/module" : doco
+"test" :
+"fixtures" :
+"quiet" :
+"^^^ set quiet to false to see logs in unit tests" : doco
+```
+
+It is sensible to put all your config under the npm package name of your module, even though I break this rule above,
+because in the real world people would be like _wtf_ if I had used `@alt-javascript/logger.levels` instead.
+
+> __Good Design Rule:__ scope your configuration values under the npm package name of your module.
+
 <a name="extending">Extending Config</a>
----------------------------------------
+----------------------------------------
+
+The designers of the usual config package have made it immutable by design, which is a sensible choice, but it does
+limit the flexibility of what we can achieve with it.
+
+To extend the behaviour of config is actually very easy, because it has a radically simple interface, with just two
+functions `get(path)` and `has(path)`. So easy, we added a defaultValue to the get to avoid having to `has()` check it.
+
+All we need to do is implement familiar delegator pattern, like we used for the `ConfigurableLogger` design in the Logging
+module, and intercept the behaviours.
+
+We do with the `DelegatingConfig` and its extension class `ValueResolvingConfig`
+
+![DelegatingConfig](./images/DelegatingConfig.png)
+
+<a name="expansion">Variable Expansion</a>
+----------------------------------------
+A common utility feature of configuration libraries is variable expansion, that allows some modularity and re use across
+configuration keys, but config doesn’t seem to support it.
+
+```json
+{
+" key": "
+"one" : "
+" placeholder": "start.${ nested.two }.
+"nested" :
+"key" : "
+"two" : "
+" placeholder": "start.${ nested.two }.
+```
+We achieve this by injecting the ValueResolvingConfig , with a Resolver, which will take the value return by the
+delegate, and as a key (or input) into a deterministic process to resolve, transform or mutate to underlying value into a
+new one. From the perspective of the user, the config object remains immutable, because the value can never be
+changed.
+
+Here is the PlaceHolderResolver
+
+![PlaceHolderResolver](./images/PlaceHolderResolver.png)

@@ -19,30 +19,30 @@ A guided design and development exercise in _plain old_ JavaScript.
 --------------------------------
 
 It's easy to think of the internet as not being grounded anywhere, but nothing is performed 
-outside of its a cultural and political context, and software design is no exception, so I offer you the following
+outside of its a cultural and political context, and software design is no exception, so we offer you the following
 two expectation setting sections, before we get into the main part of the material.
 
-I live and work in Australia, where "down here", it’s common to lead with an acknowledgement of country.
+We live and work in Australia, where "down here", it’s common to lead with an acknowledgement of country.
 
 ### Acknowledgement of Country
 
-I also acknowledge and pay my respect to the Elders past and present, to those
+We acknowledge and pay respect to the Elders past and present, to those
 who have passed before us and to the members of the Aboriginal and Torres Strait Islander
-community. I acknowledge the Turrbal and Yuggera Peoples, the traditional custodians of the beautiful city I live, 
+community. We acknowledge the Turrbal and Yuggera Peoples, the traditional custodians of the beautiful city we live, 
 work and prepare this material in.
 
 ### A Safe Space
 
-I acknowledge that discrimination and harassment persist and pervade, and that the software community continues to be more
+We also acknowledge that discrimination and harassment persist and pervade, and that the software community continues to be more
 difficult and inequitable for women, for people of colour, for the LGBTQI+ community, for those to whom English is a 
 Second Language ([ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language)), and for our "offshore" cohorts.
 
-I respect my privilege in the community as an ("onshore", monolingual) elder, white male, and work to balance the scale.
-In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him. 
-If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
+I check my privilege in the community as an ("onshore", monolingual) older, white male, and work to balance the scale.
+In the spirit on inclusion, all are safe and welcome here, my preferred pronouns are his/him, but I otherwise adopt we/us 
+throughout the material. If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
 , I  link a short [bio](./BIO.md) 
 
-With all that said, I hope that you enjoy and find value in the material.
+With all that said, we hope that you enjoy and find value in the material.
 
 <a name="audience">Audience</a>
 -------------------------------
@@ -66,7 +66,7 @@ learn a trick or two.
 > JavaScript is safe, and your tests will express your design intent stronger than types.
 >
 > I'm not saying don’t use TypeScript, if you must, only that the choice to use it is as political as it is technical, 
-> and I choose JavaScript &ndash; you don't need TypeScript, and learning in the internet's first
+> and we choose JavaScript &ndash; you don't need TypeScript, and learning in the internet's first
 > language will make your TypeScript all the better.
 >
 

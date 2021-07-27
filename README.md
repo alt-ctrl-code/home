@@ -22,7 +22,7 @@ It's easy to think of the internet as not being grounded anywhere, but nothing i
 outside of its a cultural and political context, and software design is no exception, so we offer you the following
 two expectation setting sections, before we get into the main part of the material.
 
-We live and work in Australia, where "down here", it’s common to lead with an acknowledgement of country.
+We live and work in Australia, where "down under", it’s common to lead with an acknowledgement of country.
 
 ### Acknowledgement of Country
 

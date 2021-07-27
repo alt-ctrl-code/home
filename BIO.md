@@ -53,7 +53,10 @@ I support the [Uluru Statement from the Heart](https://ulurustatement.org/), and
 Voice in our Australian Constitution,  and makaratta &ndash; the process of truth-telling and healing, for Australians
 and all other first nations people in the their lands around the world.
 
-You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, craigparra+alt-javascript is preferred.
+You can find me on LinkedIn, Twitter and Gmail with the @craigparra handle &ndash; though, if you do want to email me, 
+craigparra+alt-javascript is preferred.
+
+Peace in our time, and stay safe.
 
 
 

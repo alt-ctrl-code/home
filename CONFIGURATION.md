@@ -24,7 +24,7 @@ adding some utility features with a simple wrapping facade, guided by good desig
 <a name="notseparate">Not A Separate Concern</a>
 -----------------------------------------------
 
-For our purpose, we are going to define of application configuration as static or immutable contextual information that is 
+For our purpose, we are going to define application configuration as static or immutable contextual information that is 
 provided on application bootstrap.
 
 > __Definition:__ application configuration is static or immutable contextual information that is

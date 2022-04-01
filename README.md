@@ -94,7 +94,7 @@ Three years later in __2009__, Ryan Dahl remixes Google Chrome’s [V8](https://
 JavaScript interpreter with an event loop and I/O API to make Node.js, and isomorphic JavaScript applications and 
 the [MEAN](https://en.wikipedia.org/wiki/MEAN_(solution_stack)) stack go mainstream.
 
-Until finally JavaScript eats the world, and is arguably now the de facto  lingua franca of software development.
+Until finally JavaScript eats the world, and is (perhaps) arguably now the de facto lingua franca of web development.
 
 <a name="javascriptmatters">Why The History Matters</a>
 ----------------------------------------

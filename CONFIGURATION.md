@@ -370,7 +370,7 @@ NODE_CONFIG_PASSPHRASE environment variable.
 
 <a name="fetch">Remote Config With Fetch</a>
 -----------------------------------
-It’s easy to imaging a resolver that uses the fetch api,  but based on our earlier
+It’s easy to imagine a resolver that uses the fetch api,  but based on our earlier
 words on configuration as a service we don’t encourage it.
 
 That said, we still implemented it for raw utility and config values that start with the prefix `url.` can be 

@@ -1,12 +1,12 @@
-<a name="welcom">Welcome to @alt-javascript</a>
+<a name="welcom">Welcome to alt-ctrl-code</a>
 =============================
 
-<a name="jsdnd">JavaScript Design and Development</a>
+<a name="dnd">Code Design and Development</a>
 -----------------------------------------------------
 
-A guided design and development exercise in _plain old_ JavaScript.
+A code agnostic guided design and development exercise.
 # Contents
-1. [Introduction](#intro)
+1. [Preamble](#preamble)
 1. [Audience](#audience)
 2. [Some History](#history)
 3. [Why The History Matters](#javascriptmatters)
@@ -15,7 +15,7 @@ A guided design and development exercise in _plain old_ JavaScript.
     1. [Module 2 Logging](./LOGGING.md)
     1. [Module 3 Configuration](./CONFIGURATION.md)
 
-<a name="intro">Introduction</a>
+<a name="preamble">Preamble</a>
 --------------------------------
 
 It's easy to think of the internet as not being grounded anywhere, but nothing is performed 

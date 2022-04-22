@@ -4,7 +4,7 @@
 <a name="dnd">Software Design and Development</a>
 -----------------------------------------------------
 
-A language agnostic meditation on software design and explorations in development.
+A language agnostic meditation on software design and explorations in code.
 
 # Contents
 1. [Preamble](#preamble)
@@ -36,12 +36,12 @@ work in.
 We acknowledge that discrimination exists, and that the coding community is more
 difficult and more inequitable for women, for people of colour, for LGBTQI+ individuals, and for those whose English is a 
 Second Language ([ESL](https://simple.wikipedia.org/wiki/English_as_a_second_language)). I recognise my privilege and hope to balance the scale. In the spirit on inclusion, all are safe and welcome at
-alt-ctrl-code, my preferred pronouns are his/him, but I otherwise adopt we/us on the site.  If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
-, I  link a short [bio](./BIO.md).  With all that said, we hope that you enjoy and find value in the site.
+`alt-ctrl-code`, my preferred pronouns are his/him, but I otherwise adopt we/us on the site.  If you'd like to know more about me [IRL](https://simple.wikipedia.org/wiki/Internet_slang#:~:text=Some%20existing%20acronyms%2C%20such%20as,before%20the%20internet%20became%20popular.)
+, I  link a short [bio](./BIO.md).  With all that said, we hope that you enjoy and find value in the work.
 
 <a name="audience">Audience</a>
 -------------------------------
-Our goal at `alt-ctrl-code` is sharing for coders at any level, junior and “senior”, fresh or not-so-fresh.   We assume some familiarity with coding in
+Our goal at `alt-ctrl-code` is sharing with coders at any level, junior and “senior”, fresh or not-so-fresh.   We assume some familiarity with coding in
 a developer stack, perhaps JavaScript or Go or Python, and though we don't aim to cover languages directly, we do refer to and include them from
 time to time.   This is our extended meditation on application design, regardless of the particular stacks we use, or whether 
 we adopt TDD, linting and so on.  The explorations escalate naturally, so suspend your disbelief, and enjoy the show.  
@@ -86,7 +86,7 @@ application with supporting API, SDK and CLI, running in the cloud. Our aim is t
 allowing us to focus on the specific design and code  elements, without the cognitive burden of busy application 
 features and code.
 
-The module application source and packages are provided (and linked) publicly here on [GitHub](https://github.com/) and
+Module application example source and packages are provided (and linked) publicly here on [GitHub](https://github.com/) and
 [npm](https://www.npmjs.com/) .
 
 - [Module 1 Packaging](https://github.com/craigparra/alt-package-conventions#readme)

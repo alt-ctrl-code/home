@@ -73,7 +73,7 @@ on Java or C#, or got started in Ruby or Node or whatever, the diversity of our 
 
 While all languages and different, in that they emerge at different times with different goals, and may have radically 
 divergant idioms and norms, whether its the enterprise "safety" of Java and C#, the isomorphism of JavaScript ("The world’s most misunderstood programming language"), the pure
-productivity of Python, or the frugal asceticism of Go,  whatever attracts us, the goals of the coder more often remain doggedly consistent, whether parsing a file or 
+productivity of Python, or the athletic asceticism of Go,  whatever attracts us, the goals of the coder more often remain doggedly consistent, whether parsing a file or 
 exposing an endpoint, and sampling a generous variety is probably healthy advice.
 
 

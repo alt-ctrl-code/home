@@ -81,15 +81,15 @@ Exploring design approaches and coding choices, across ecosystems, makes our wor
 
 <a name="approach">Approach</a>
 -------------------------------
-Our goal is to build over a series of modules. Each module advocates toward a small but "complete" progressive web 
+Our goal is to consider a series of topics. Each topic contributes toward a small but "complete" progressive web 
 application with supporting API, SDK and CLI, running in the cloud. Our aim is to "think out" a very narrow slice, 
-allowing us to focus on the specific design and code  elements, without the cognitive burden of busy application 
+allowing us to reason about specific design and code ideas, without the cognitive burden of busy application 
 features and code.
 
 Module application example source and packages are provided (and linked) publicly here on [GitHub](https://github.com/) and
 [npm](https://www.npmjs.com/) .
 
-- [Module 1 Packaging](https://github.com/craigparra/alt-package-conventions#readme)
-- [Module 2 Configuration](./CONFIGURATION.md)
-- [Module 3 Logging](./LOGGING.md)
+- [Topic 1 Packaging](https://github.com/craigparra/alt-package-conventions#readme)
+- [Topic 2 Configuration](./CONFIGURATION.md)
+- [Topic 3 Logging](./LOGGING.md)
 

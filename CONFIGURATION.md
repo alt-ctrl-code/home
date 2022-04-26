@@ -1,139 +1,194 @@
-<a name="logging">Configuration Design Trail</a>
+<a name="logging">Configuration</a>
 ================================================
 
-This material extends the excellent [config](https://www.npmjs.com/package/config) package, 
-adding some utility features with a simple wrapping facade, guided by good design rules and architecture principles.
+This topic considers the notion of application, system or program "configuration", what it is -- _and isn't_ -- and
+ explores useful features that might assist us using or deploying our code in a variety of contexts
+we might find our code used in.
 
 # Contents
-1. [Not A Separate Concern](#notseparate)
-1. [Nothing Left Outside](#nothingoutside)
-1. [Not As A Service](#notaservice)
-1. [Dynamic Configuration, Is No Such _Thing_](#notdynamic)
-1. [JavaScript Configuration](#jsconfig)
-1. [The _Word_ on CONSTANTS](#constants)
-1. [Common Configuration Modules](#constants)
+1. [Definition](#definition)
+1. [Configuration Or Code](#notseparate)
+2. [Anything Outside The Lifecycle](#nothingoutside)
+1. [As a "Service"?](#notaservice)
+3. [Dynamic Configuration?](#notdynamic)
+4. [Configuration Options](#options)
+5. [The _Word_ on CONSTANTS](#constants)
+6. [Common Configuration Modules](#constants)
    1. [dotenv](#dotenv)
    1. [config](#config)
-1. [Scope All Config Values](#scope)
-1. [Extending Config](#extending)
-1. [Variable Expansion](#expansion)
-1. [Decryption](#decrypt)
-1. [Remote Config With Fetch](#fetch)
-1. [ConfigFactory](#factory)
+7. [Scope All Config Values](#scope)
+8. [Extending Config](#extending)
+9. [Variable Expansion](#expansion)
+10. [Decryption](#decrypt)
+11. [Remote Config With Fetch](#fetch)
+12. [ConfigFactory](#factory)
 
-<a name="notseparate">Not A Separate Concern</a>
+<a name="definition">Definition</a>
 -----------------------------------------------
 
-For our purpose, we are going to define application configuration as static or immutable contextual information that is 
-provided on application bootstrap.
+For our purpose, lets define application configuration as static or immutable contextual information that is
+provided on application bootstrap, for the system to behave correctly in a given specific context 
+that it is being used.
 
 > __Definition:__ application configuration is static or immutable contextual information that is
 >provided on application bootstrap.
 
-With that, beyond what is provided by the browser or node process, are the urls, hosts, ports, accounts and credentials 
-that our application requires in various deployment configurations such as _local, dev, uat, and production_, a separate
-concern to our application code?  To expand on that, should any or all of application configuration reside somewhere 
-else other than alongside the application source code?
+By static or immutable, we understand that the configuration and any values or settings specified by it, 
+_will not change_ after the system starts.
 
-This is an _opinionated_ position, but it is a good design rule, and as much as possible, to maintain your application 
-configuration (as we have defined it) alongside your application source code, to version control it _as if it were source
-code_ and bundle it along with your application packages.
+<a name="notseparate">Configuration Or Code</a>
+-----------------------------------------------
 
-Said differently, it is a good design rule to maintain as little context information as possible outside of the 
+With that definition, beyond what is provided by the language and system runtime environment, are the specific resource urls, 
+hosts, ports, accounts and credentials that our code requires to run correctly in our various deployment contexts, 
+such as _local, testing, integration, and production_, a separate concern to our application code?  
+
+Said another way, should any or all of our code configuration reside somewhere else other than alongside our code? Or is 
+it just _more_ code.
+
+From experience, our position is that it is a healthy choice, to maintain as much as possible of our application 
+configuration (as we have defined it) alongside our application source code, to version control it _as if it were source
+code_ and bundle it along with our application packages.
+
+Said differently, it is a good design rule to maintain as little context information as possible outside of the
 application's own build and deployment lifecycle.
 
-> __Good Design Rule:__  maintain as little context information as possible outside of the
+> __Healthy Choice:__  maintain as little context information as possible outside of the
 application's own build and deployment lifecycle.
 
-This has __deep and important consequences__, because in this position _configuration is code_. Configuration changes are 
-code changes, and should be promoted through the build, test and deployment cycle. Maintaining and deploying 
-configuration, either manually or automatically, on a lifecycle outside of your application code lifecycle, 
-introduces complexity and risk and reduces the testability and flexibility of your possible deployment configurations, 
-especially to the local developer (who needs it the most).
+This is the position taken in the Java Spring Boot ecosystem with `application.properties` ,
+and also in the .NET Core with `appsettings.json`, where these file collections are generally found (expected) in the project or classpath 
+root location.  While in both ecosystems, it is not _mandatory_ to host these configuration resources in the source code
+repository, it seems increasingly common to do so. These well established configuration frameworks support it, and it simplifies
+our overall development experience and system complexity.
 
-<a name="nothingoutside">Nothing Left Outside</a>
+This choice has __important consequences__, because in this position _configuration is code_. Configuration changes are code changes, and will be promoted through our build, test and deployment lifecycle. 
+
+Maintaining and deploying configuration, manually or automatically, on a lifecycle outside our application code lifecycle, 
+introduces complexity and risk, and reduces the testability and flexibility of our possible deployment configurations, 
+especially for local development -- where we need it most.
+
+<a name="nothingoutside">Anything Outside The Lifecycle?</a>
 ------------------------------------------------
 
-If it is a good design rule to maintain as little context information as possible outside of the application build and
+If it is a healthy choice to maintain as little context information as possible outside of the application build and
 deployment lifecycle, then _what is okay_? 
 
-It is a good design rule that the only application configuration that should be injected into your application from 
-outside should be the unique handle of the deployment configuration your application will be operating in, and any 
+From experience, it is easiest if the only application configuration  injected into our application from 
+outside is the unique handle of the deployment configuration our application will be operating in, and any 
 secure secrets required to access sensitive configuration values such as credentials like passwords and tokens.
 
-It is also a good design rule, that where practicable and secure, only a single secure passphrase should be injected to 
-unlock (decrypt) secret values stored alongside your code.  There are various approaches to managing secret 
-configuration, with increasing sophistication, but we will include a simple approach later in this material.
+It is also easier, where practicable and secure, that only a single secure passphrase be injected to 
+unlock (decrypt) secret values stored alongside our code.  We will cover a simple approach later.
 
-> __Good Design Rule:__  only a unique handle to the deployment configuration your application will be operating in,
-> and a secure passphrase to access sensitive values should be injected from _outside_.  That's right, just two.
+> __Healthy Choice:__  only a unique handle to the deployment configuration our application will be operating in,
+> and a secure passphrase to access sensitive values should be injected from _outside_.
 
-In Node.js, it’s a good design rule to use the __NODE_ENV__ environment variable convention to inject your unique handle 
-of the deployment configuration, and use production as the conventional handle for “live” (there are solutions for 
-scaling also).  We will not cover config in the browser in this material, but later.
+In Java, .NET and JavaScript the use of single deployment context indicators is well-supported.
 
-> __Good Design Rule:__  use the NODE_ENV environment variable convention to inject your unique handle
-> of the deployment configuration, and use production as the conventional handle for “live”.
+* In Java and Spring Boot, the unique handle of the deployment configuration is indicated with Spring's active profiles
+mechanism, either by supplying the `SPRING_PROFILES_ACTIVE` environment variable (or the `-Dspring.profiles.active` command line 
+argument), with comma separated list that dictate the configuration file selection and over-loading order.  
 
-<a name="notaservice">Not As A Service</a>
+* .NET provides a similar approach, with more "manual" file selection indicated by the developer, using the `FileConfigurationProvider`
+([docs](https://docs.microsoft.com/en-us/dotnet/core/extensions/configuration-providers#file-configuration-provider))
+
+* In Node.js,  the [config](https://www.npmjs.com/package/config) package
+   supports a familiar Spring Boot-esque application configuration loading, using the __NODE_ENV__ environment 
+variable convention .
+
+Support for configuration encrypted at rest in source control is less well-supported over-all, with a lo-fi tendency
+to rely on environment variables.
+
+* Spring Boot supports decryption of values stored encrypted in source control of the form `ENC(asdasdasd)` via the Jasypt library and
+the `-Djasypt.encryptor.password` argument.
+
+* .NET relies on the use of Secrets Manager, `dotnet user-secrets` command line and associated
+loading, requiring the local developer to manually add any required secrets to provide sensitive data, or
+write specific configuration loading logic for the local context.
+
+* Other platforms like JavaScript and Go seem not to provide a higher-order mechanism, other than environment variables.
+
+    
+Having set the above advice, there may be legitimate non-technical drivers that might preclude maintaining some
+configuration values in the code lifecycle.   A system requiring regulatory approvals with digital hashing of the code base, 
+where the approval cycle is slower than the volatility of the system configuration (for example, credentials might need
+to be refreshed on a schedule faster than the regulator can support or allow), could be such an example.  There would
+be endless others.
+
+In general, if necessary,  its a healthy choice, to minimise non-source controlled configuration as much as possible, and _dereference_ 
+those we cannot with a consistent mechanism if possible. 
+
+> __Healthy Choice:__  if necessary, for non-technical reasons, minimise non-source controlled configuration as much as possible, and _dereference_
+> those we cannot with a consistent mechanism if possible.
+
+
+<a name="notaservice">As A Service?</a>
 ------------------------------------------
 
-It is not an uncommon pattern to provide configuration as a service, hosted remotely and ingested over the network.
+It is not an uncommon pattern to provide configuration as a service, hosted remotely and ingested over the network. [Spring Cloud Config](https://spring.io/projects/spring-cloud-config) is  
+ such an example.
 
-With respect to our __opinionated position__ that its good to maintain your application configuration 
-(as we have defined it) alongside your application source code, then it follows that having a build lifecycle for your
-configuration in another application service is bad. It’s a good design rule to __not__ manage your application 
+With respect to our __healthy choice__ that its good to maintain our application configuration 
+ alongside our application source code, then it follows that having a build lifecycle for our
+configuration in another application service is undesirable. 
+
+It’s generally a healthy choice to __not__ manage your application 
 configuration in a separate external (possibly shared) service, as it increases the accidental complexity of the deployment
 architecture, making it difficult to configure different and ephemeral deployment options, 
 including _local development and testing_.
 
-> __Good Design Rule:__  _do not_ manage your application configuration as a separate external service. Because 
+> __Healthy Choice:__  _do not_ manage our application configuration as a separate external service. Because 
 > _accidental complexity_.
 
-<a name="notdynamic">Dynamic Configuration, Is No Such _Thing_</a>
+Having set the above advice, again where there may be legitimate non-technical drivers that  preclude maintaining some
+configuration values in the code lifecycle, then minimise remote configuration values as much as possible, and _dereference_
+those we ingest from the remote service with a consistent mechanism if possible.
+
+> __Healthy Choice:__  if necessary, for non-technical reasons, minimise remote configuration values as much as possible, and _dereference_
+those we ingest from any remote service with a consistent mechanism if possible.
+
+<a name="notdynamic">Dynamic Configuration?</a>
 ------------------------------------------------------------------
 
 From our definition, we said application configuration is static or immutable contextual information that is provided on
-application bootstrap. So it follows that updating system parameters after bootstrap is _no longer the concern of your 
+application bootstrap. So it follows that updating system parameters after bootstrap is _no longer the concern of our 
 application configuration design_. Said differently, configuration is by definition &ndash; _not dynamic_. So it follows 
-that it's a good design rule to separate initial bootstrap configuration from any runtime updates to dynamic application 
-flags and parameters.
+that it's a healthy choice to separate initial bootstrap configuration from any runtime updates to dynamic application 
+switches and routing.
 
-> __Good Design Rule:__  separate initial bootstrap configuration from runtime updates to dynamic application service 
-> flags or parameters.
+> __Healthy Choice:__  separate initial bootstrap configuration from runtime updates to dynamic application service 
+> switches or routing.
 
-The use of the
-[LoggerCategoryCache](https://github.com/craigparra/alt-logger/blob/master/LoggerCategoryCache.js) by the `LoggerFactory` in the
-[Logging](./LOGGING.md) trail is a good example of this separation; if the `ConfigurableLogger` were to rely on the
-immutable configuration values, we would not be able to alter our logger category levels at run time, which we
-definitely want to do.
+More generally speaking, it is also a good pattern to fetch and set initial application parameter values only one-time on startup
+from the application configuration, rather than in-line fetching from the config each time they are used. 
 
-More generally speaking, it is also a good pattern to fetch and set initial application parameter values only one-time
-from the application configuration facade, rather than in-line fetching from the config facade every time they are used. 
+> __Healthy Choice:__  fetch and set initial application parameter values from the application configuration, 
+> rather than inline fetching from the config each and every time.
 
-> __Good Design Rule:__  fetch and set initial application parameter values from the application configuration facade, 
-> rather than inline fetching from the facade each and every time.
+Note, a fetch and set pattern (as described above) does not stop us achieving those 
+dynamic updates, it is just _not the concern of our application configuration design_.  
 
-Note, and this is _important_, a fetch and set pattern (as described above) does not dictate _how_ you achieve those 
-dynamic updates, and it is _not the concern of your application configuration design_.  Polling Launch Darkly, or some 
-other configuration service, or exposing an API interface to tweak a system parameter are user stories with complex 
-application integration patterns, all of which increase the entropy of your application architecture, and the 
-complexity of your human operational interface.
+Polling Launch Darkly, or some other configuration service, or exposing an API interface to tweak a system parameter are user stories with complex 
+application integration patterns, all of which increase the entropy of our application architecture, and the 
+complexity of our operating processes.
 
-They sure are cool and super-interesting concerns, but let's park them for later.
+They sure are cool and super-interesting concerns, but we'll park them for later.
 
-<a name="jsconfig">JavaScript Configuration</a>
+<a name="options">Configuration Options</a>
 -----------------------------------------------
 
-JavaScript offers various options for injecting application configuration from “outside”. Browsers provide the 
-window and window.navigator objects, with relevant (though not standard) system information, and Node.js has three 
-fundamental ways it exposes immediate “system” context information passed into the runtime interpreter: 
+Languages offers various options for injecting application configuration from “outside”.  Server side
+langauges have three fundamental ways it exposes immediate “system” context information passed into the runtime interpreter: 
 
 - command-line arguments,
 - environment variables, and 
 - I/O operations.
 
-We'll  address node.js here, and defer the browser for later.
+JavaScript in the browser is unique in this respect and provides the window and window.navigator objects, with 
+relevant (though not standard) system information.  
+
+Let's address server languages here, and defer the browser for later.
 
 ### Command-Line Arguments
 

@@ -7,21 +7,25 @@ we might find our code used in.
 
 # Contents
 1. [Definition](#definition)
-2. [Configuration Or Code](#notseparate)
-3. [Anything Outside The Lifecycle](#nothingoutside)
-4. [As a "Service"?](#notaservice)
-5. [Dynamic Configuration?](#notdynamic)
-6. [A _Thought_ on CONSTANTS](#constants)
-7. [Configuration Options](#options)
-8. [Common Configuration Modules](#constants)
+2. [Configuration Options](#options)
+   1. [Command Line Arguments](#cli)
+   2. [Environment Variables](#env)
+   3. [Input / Output](#cli)
+3. [A _Thought_ on "Devops"](#devops)
+4. [Configuration Or Code](#notseparate)
+5. [Outside The Lifecycle](#nothingoutside)
+6. [As a "Service"](#notaservice)
+7. [Dynamic Configuration](#notdynamic)
+8. [A _Thought_ on CONSTANTS & CONFIG](#constants)
+9. [Common Configuration Modules](#constants)
    1. [dotenv](#dotenv)
    1. [config](#config)
-9. [Scope All Config Values](#scope)
-10. [Extending Config](#extending)
-11. [Variable Expansion](#expansion)
-12. [Decryption](#decrypt)
-13. [Remote Config With Fetch](#fetch)
-14. [ConfigFactory](#factory)
+10. [Scope All Config Values](#scope)
+11. [Extending Config](#extending)
+12. [Variable Expansion](#expansion)
+13. [Decryption](#decrypt)
+14. [Remote Config With Fetch](#fetch)
+15. [ConfigFactory](#factory)
 
 <a name="definition">Definition</a>
 -----------------------------------------------
@@ -36,12 +40,96 @@ that it is being used.
 By static or immutable, we understand that the configuration and any values or settings specified by it, 
 _will not change_ after the system starts.
 
+<a name="options">Configuration Options</a>
+-----------------------------------------------
+
+Languages offer various options for injecting application configuration from “outside”.  Server side
+langauges have three fundamental ways they expose immediate “system” context information passed into the runtime :
+
+- command-line arguments,
+- environment variables, and
+- I/O operations.
+
+JavaScript in the browser is unique in this respect and provides the window and window.navigator objects, with
+relevant (though not standard) system information.
+
+Let's address server languages here, and defer the browser for later.
+
+### <a name="cli">Command-Line Arguments</a>
+
+Language runtimes provide ways of accessing commandline arguments, traditionally accessed though a `main` function
+as an array of string, like `Main (string[] args)` or `main (String args)`.
+
+Many ecosystems offer alternatives to the traditional program entry point, for example
+.NET also provides `Environment.GetCommandLineArgs();`, and Go provides `os.Args`.
+
+Java retains only the `main (String args)`, but the ecosystem (including Spring Boot) tends to use -D and system
+properties, for example `-Dspring-boot.run.arguments=--spring.main.banner-mode=off,--customArgument=custom`.
+
+Javascript has the process object, which exposes the `process.argv` and `process.execArgv` arrays with the command-line parameters
+provided, including the executable, the target script and then trailing parameters as so.
+
+```shell
+// contents of argv.js script console.log(process.argv);
+$ node argv.js one two three four five
+[ 'node', '/usr/src/argvdemo/argv.js', 'one', 'two', 'three', 'four', 'five' ]
+```
+
+Outside of a dedicated command line tools and utilities, it’s a healthy choice to mostly avoid injecting
+command line arguments as application configuration.  Any non-trivial system will have a large number of configuration
+items, and managing and parsing large numbers of command line arguments quickly becomes unwieldy, and are generally
+hard to _source control_
+
+> __Healthy Choice:__  mostly, avoid injecting command line arguments as application configuration.
+
+### <a name="env">Environment Variables</a>
+
+Language runtimes also provide ways of accessing environment variables. .NET provides `Environment.GetEnvironmentVariables();`, Java 
+provides `System.getenv`, Javascript `process.env`, and Go provides `os.Environ` or `os.GetEnv`.
+
+With a few notable exceptions, that we will cover soon, it’s a healthy choice to mostly avoid injecting custom
+environment variables as application configuration. Again, any non-trivial system will have a large number of configuration
+items, and managing and setting large numbers of environment variables quickly becomes unwieldy, and are generally
+hard to _source control_.
+
+> __Healthy Choice:__  mostly, avoid injecting environment variables as application configuration.
+
+### <a name="io">Input / Output</a>
+
+Since, as a rule, it’s healthy choice to minimise the use of command line arguments and environment variables,
+we are left with the runtime I/O facilities to load application configuration from the file system or network interfaces.
+
+Since for the purpose of this module, we have constrained our definition of application configuration to _static or
+immutable_ contextual information provided on application bootstrap, and the _network_ is rarely either of those, it
+follows that is generally a healthy choice to get application configuration from the local file system (ideally your
+source application bundle)
+
+> __Healthy Choice:__  inject configuration from read-only files bundled with your application.
+
+There are specific exceptions to this choice, for particular reasons that we will cover later.
+
+<a name="devops">A _Thought_ on "Devops"</a>
+-----------------------------------------------
+
+Because configuration touches on an important and common organisational and governing "super-structure", we’ll cover it 
+now, before we get further into the weeds: it’s a healthy choice to combine development with
+operations  – we feel it is the essence of _devops_, more so than merely adopting “infrastructure as code”.  It's what
+we might mean if we ever used the phrase “full-stack”, which is a nonsensical term for too many reasons to cover here.
+
+> __Healthy Choice:__  combining development with operations, in a _true_ devops organisational model delivers
+> more flexible and scalable applications, more efficiently and more effectively.
+
+Broadly speaking, if your operational environment’s security context is insistent on a “separation of authority” between
+development and operations, it is likely to limit your local deployment flexibility, but even so, good application design
+can mitigate this, which hopefully we will demonstrate eventually.
+
 <a name="notseparate">Configuration Or Code</a>
 -----------------------------------------------
 
-With that definition, beyond what is provided by the language and system runtime environment, are the specific resource urls, 
-hosts, ports, accounts and credentials that our code requires to run correctly in our various deployment contexts, 
-such as _local, testing, integration, and production_, a separate concern to our application code?  
+With our opening definition, and in the context of "devops",  beyond what is provided by the language and system runtime 
+environment, are the specific configuration items, such  urls, hostnames, ports, accounts and credentials that our 
+code requires to run correctly in our various deployment contexts, such as _local, testing, integration, and 
+production_, a separate concern to our application code?  
 
 Said another way, should any or all of our code configuration reside somewhere else other than alongside our code? Or is 
 it just _more_ code.
@@ -50,7 +138,7 @@ From experience, our position is that it is a healthy choice, to maintain as muc
 configuration (as we have defined it) alongside our application source code, to version control it _as if it were source
 code_ and bundle it along with our application packages.
 
-Said differently, it is a good design rule to maintain as little context information as possible outside of the
+Said differently, it is a healthy choice to maintain as little context information as possible outside of the
 application's own build and deployment lifecycle.
 
 > __Healthy Choice:__  maintain as little context information as possible outside of the
@@ -62,13 +150,14 @@ root location.  While in both ecosystems, it is not _mandatory_ to host these co
 repository, it seems increasingly common to do so. These well established configuration frameworks support it, and it simplifies
 our overall development experience and system complexity.
 
-This choice has __important consequences__, because in this position _configuration is code_. Configuration changes are code changes, and will be promoted through our build, test and deployment lifecycle. 
+This choice has __important consequences__, because in this position _configuration is code_. Configuration changes 
+are code changes, and will be promoted through our build, test and deployment lifecycle. 
 
 Maintaining and deploying configuration, manually or automatically, on a lifecycle outside our application code lifecycle, 
 introduces complexity and risk, and reduces the testability and flexibility of our possible deployment configurations, 
 especially for local development -- where we need it most.
 
-<a name="nothingoutside">Anything Outside The Lifecycle?</a>
+<a name="nothingoutside">Outside The Lifecycle</a>
 ------------------------------------------------
 
 If it is a healthy choice to maintain as little context information as possible outside of the application build and
@@ -123,7 +212,7 @@ those we cannot with a consistent mechanism if possible.
 > those we cannot with a consistent mechanism if possible.
 
 
-<a name="notaservice">As A Service?</a>
+<a name="notaservice">As A Service</a>
 ------------------------------------------
 
 It is not an uncommon pattern to provide configuration as a service, hosted remotely and ingested over the network. [Spring Cloud Config](https://spring.io/projects/spring-cloud-config) is  
@@ -148,7 +237,7 @@ those we ingest from the remote service with a consistent mechanism if possible.
 > __Healthy Choice:__  if necessary, for non-technical reasons, minimise remote configuration values as much as possible, and _dereference_
 those we ingest from any remote service with a consistent mechanism if possible.
 
-<a name="notdynamic">Dynamic Configuration?</a>
+<a name="notdynamic">Dynamic Configuration</a>
 ------------------------------------------------------------------
 
 From our definition, we said application configuration is static or immutable contextual information that is provided on
@@ -175,7 +264,7 @@ complexity of our operating processes.
 
 They sure are cool and super-interesting concerns, but we'll park them for later.
 
-<a name="constants">A _Thought_ on CONSTANTS vs CONFIG</a>
+<a name="constants">A _Thought_ on CONSTANTS & CONFIG</a>
 ---------------------------------------------
 
 Before we get further into the weeds with modules, lets have a _think_ on `CONSTANTS`. Configuration and constants
@@ -206,89 +295,6 @@ const {FINE_STRUCTURE} = require ('FundamentalConstants');
 const {c,G} = require ('PhysicalConstants');
 ```
 > __Healthy Choice:__  constants should be grouped, enumerated and exposed via a meaningful module or package.
-
-
-<a name="options">Configuration Options</a>
------------------------------------------------
-
-Languages offer various options for injecting application configuration from “outside”.  Server side
-langauges have three fundamental ways they expose immediate “system” context information passed into the runtime : 
-
-- command-line arguments,
-- environment variables, and 
-- I/O operations.
-
-JavaScript in the browser is unique in this respect and provides the window and window.navigator objects, with 
-relevant (though not standard) system information.  
-
-Let's address server languages here, and defer the browser for later.
-
-### Command-Line Arguments
-
-Language runtimes provide ways of accessing commandline arguments, traditionally accessed though a `main` function
-as an array of string, like `Main (string[] args)` or `main (String args)`.
-
-Many ecosystems offer alternatives to the traditional program entry point, for example
-.NET also provides `Environment.GetCommandLineArgs();`, and Go provides `os.Args`.  
-
-Java retains only the `main (String args)`, but the ecosystem (including Spring Boot) tends to use -D and system 
-properties, for example `-Dspring-boot.run.arguments=--spring.main.banner-mode=off,--customArgument=custom`.
-
-Javascript has the process object, which exposes the `process.argv` and `process.execArgv` arrays with the command-line parameters 
-provided, including the executable, the target script and then trailing parameters as so.
-
-```shell
-// contents of argv.js script console.log(process.argv);
-$ node argv.js one two three four five
-[ 'node', '/usr/src/argvdemo/argv.js', 'one', 'two', 'three', 'four', 'five' ]
-```
-
-Outside of a dedicated command line tools and utilities, it’s a healthy choice to mostly avoid injecting 
-command line arguments as application configuration.  Any non-trivial system will have a large number of configuration
-items, and managing and parsing large numbers of command line arguments quickly becomes unwieldy, and are generally
-hard to _source control_
-
-> __Healthy Choice:__  mostly, avoid injecting command line arguments as application configuration.
-
-### Environment Variables
-
-Language runtimes also provide ways of accessing environment variables.  .NET  
-provides `Environment.GetEnvironmentVariables();`, Java provides `System.getenv`, Javascript `process.env`, and Go provides `os.Environ` or `os.GetEnv`.
-
-With a few notable exceptions, that we will cover soon, it’s a healthy choice to mostly avoid injecting custom 
-environment variables as application configuration. Again, any non-trivial system will have a large number of configuration
-items, and managing and setting large numbers of environment variables quickly becomes unwieldy, and are generally
-hard to _source control_.
-
-> __Healthy Choice:__  mostly, avoid injecting environment variables as application configuration.
-
-
-#### Devops
-
-Because env vars touch on an  important and common problem, we’ll cover now it now: it’s a healthy choice to combine
-development with operations  – we feel it is the essence of _devops_, more so
- than merely adopting “infrastructure as code”.  It's what we might mean if we ever used the phrase “full-stack”, which 
-is a non-sense term for too many reasons to cover here.
-
-> __Healthy Choice:__  combining development with operations, in a _true_ devops organisational model delivers
-> more flexible and scalable applications, more efficiently and more effectively.
-
-Broadly speaking, if your operational environment’s security context is insistent on a “separation of authority” between
-development and operations, it is likely to limit your local deployment flexibility, but even so, good application design 
-can mitigate this, which hopefully we will demonstrate eventually.
-
-### Input / Output
-
-Since, as a rule, it’s good design practice to minimise the use of command line arguments and environment variables, 
-we are left with the runtime I/O facilities to load application configuration from the file system or network interfaces.
-
-
-Since for the purpose of this module, we have constrained our definition of application configuration to _static or 
-immutable_ contextual information provided on application bootstrap, and the _network_ is rarely either of those, it 
-follows that is is a healthy choice to get application configuration from the file system (ideally your 
-application bundle)
-
-> __Healthy Choice:__  inject configuration from read-only files bundled with your application.
 
 
 <a name="jscondig">Common Configuration Modules</a>

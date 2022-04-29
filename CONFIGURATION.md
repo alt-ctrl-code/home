@@ -7,21 +7,21 @@ we might find our code used in.
 
 # Contents
 1. [Definition](#definition)
-1. [Configuration Or Code](#notseparate)
-2. [Anything Outside The Lifecycle](#nothingoutside)
-1. [As a "Service"?](#notaservice)
-3. [Dynamic Configuration?](#notdynamic)
-4. [Configuration Options](#options)
-5. [The _Word_ on CONSTANTS](#constants)
-6. [Common Configuration Modules](#constants)
+2. [Configuration Or Code](#notseparate)
+3. [Anything Outside The Lifecycle](#nothingoutside)
+4. [As a "Service"?](#notaservice)
+5. [Dynamic Configuration?](#notdynamic)
+6. [A _Thought_ on CONSTANTS](#constants)
+7. [Configuration Options](#options)
+8. [Common Configuration Modules](#constants)
    1. [dotenv](#dotenv)
    1. [config](#config)
-7. [Scope All Config Values](#scope)
-8. [Extending Config](#extending)
-9. [Variable Expansion](#expansion)
-10. [Decryption](#decrypt)
-11. [Remote Config With Fetch](#fetch)
-12. [ConfigFactory](#factory)
+9. [Scope All Config Values](#scope)
+10. [Extending Config](#extending)
+11. [Variable Expansion](#expansion)
+12. [Decryption](#decrypt)
+13. [Remote Config With Fetch](#fetch)
+14. [ConfigFactory](#factory)
 
 <a name="definition">Definition</a>
 -----------------------------------------------
@@ -153,7 +153,7 @@ those we ingest from any remote service with a consistent mechanism if possible.
 
 From our definition, we said application configuration is static or immutable contextual information that is provided on
 application bootstrap. So it follows that updating system parameters after bootstrap is _no longer the concern of our 
-application configuration design_. Said differently, configuration is by definition &ndash; _not dynamic_. So it follows 
+application configuration_. Said differently, configuration is by definition &ndash; _not dynamic_. So it follows 
 that it's a healthy choice to separate initial bootstrap configuration from any runtime updates to dynamic application 
 switches and routing.
 
@@ -163,11 +163,11 @@ switches and routing.
 More generally speaking, it is also a good pattern to fetch and set initial application parameter values only one-time on startup
 from the application configuration, rather than in-line fetching from the config each time they are used. 
 
-> __Healthy Choice:__  fetch and set initial application parameter values from the application configuration, 
+> __Healthy Choice:__  fetch and set initial application parameter values from the application configuration one-time, 
 > rather than inline fetching from the config each and every time.
 
 Note, a fetch and set pattern (as described above) does not stop us achieving those 
-dynamic updates, it is just _not the concern of our application configuration design_.  
+dynamic updates, it is just _not the concern of our application configuration_.  
 
 Polling Launch Darkly, or some other configuration service, or exposing an API interface to tweak a system parameter are user stories with complex 
 application integration patterns, all of which increase the entropy of our application architecture, and the 
@@ -175,11 +175,44 @@ complexity of our operating processes.
 
 They sure are cool and super-interesting concerns, but we'll park them for later.
 
+<a name="constants">A _Thought_ on CONSTANTS vs CONFIG</a>
+---------------------------------------------
+
+Before we get further into the weeds with modules, lets have a _think_ on `CONSTANTS`. Configuration and constants
+are also separate concerns, since configuration is by definition not CONSTANT.
+
+But it's not uncommon to see something like the following:
+
+```javascript
+const CONFIG = {};
+CONFIG.ENV = process.env.NODE_ENV; // is a smell
+```
+
+We've used JavaScript in the example, noting that JavaScript doesn't cater well for object constants and we adopt `UPPER_SNAKE_CASE` as a well understood
+convention to indicate constancy instead, but the smell appears in other ecosystems.
+
+So apart from the obvious, that the attributes of the `CONFIG` const are not in fact constant,
+the `NODE_ENV` environment variable is by name and definition a _variable_, consistent only in the lifetime or scope of an
+application's deployment context.  This is true of all configuration.
+
+> __Healthy Choice:__  separate CONSTANTS from configuration, especially environment variables.
+
+
+The `CONFIG` const is also _global_ to the scope of the module, and often seen exported as such. Global config constants
+are a smell, and constants should be grouped, enumerated and exposed via a meaningful module or package:
+
+```javascript
+const {FINE_STRUCTURE} = require ('FundamentalConstants'); 
+const {c,G} = require ('PhysicalConstants');
+```
+> __Healthy Choice:__  constants should be grouped, enumerated and exposed via a meaningful module or package.
+
+
 <a name="options">Configuration Options</a>
 -----------------------------------------------
 
-Languages offers various options for injecting application configuration from “outside”.  Server side
-langauges have three fundamental ways it exposes immediate “system” context information passed into the runtime interpreter: 
+Languages offer various options for injecting application configuration from “outside”.  Server side
+langauges have three fundamental ways they expose immediate “system” context information passed into the runtime : 
 
 - command-line arguments,
 - environment variables, and 
@@ -192,7 +225,16 @@ Let's address server languages here, and defer the browser for later.
 
 ### Command-Line Arguments
 
-The node runtime provides the process object, which exposes the `process.argv` array with the command-line parameters 
+Language runtimes provide ways of accessing commandline arguments, traditionally accessed though a `main` function
+as an array of string, like `Main (string[] args)` or `main (String args)`.
+
+Many ecosystems offer alternatives to the traditional program entry point, for example
+.NET also provides `Environment.GetCommandLineArgs();`, and Go provides `os.Args`.  
+
+Java retains only the `main (String args)`, but the ecosystem (including Spring Boot) tends to use -D and system 
+properties, for example `-Dspring-boot.run.arguments=--spring.main.banner-mode=off,--customArgument=custom`.
+
+Javascript has the process object, which exposes the `process.argv` and `process.execArgv` arrays with the command-line parameters 
 provided, including the executable, the target script and then trailing parameters as so.
 
 ```shell
@@ -201,84 +243,53 @@ $ node argv.js one two three four five
 [ 'node', '/usr/src/argvdemo/argv.js', 'one', 'two', 'three', 'four', 'five' ]
 ```
 
-The process object also exposes the `process.execArgv` array with the Node.js specific command-line parameters provided,
-such as –version and the `process.execPath` with the absolute pathname of the executable that started the Node.js process.
+Outside of a dedicated command line tools and utilities, it’s a healthy choice to mostly avoid injecting 
+command line arguments as application configuration.  Any non-trivial system will have a large number of configuration
+items, and managing and parsing large numbers of command line arguments quickly becomes unwieldy, and are generally
+hard to _source control_
 
-Outside of a dedicated command line interface (cli), it’s a good design rule to mostly avoid injecting 
-command line arguments as application configuration.
-
-> __Good Design Rule:__  mostly, avoid injecting command line arguments as application configuration.
+> __Healthy Choice:__  mostly, avoid injecting command line arguments as application configuration.
 
 ### Environment Variables
 
-The node runtime process object also exposes the `process.env` object with the “visible” system environment variables, 
-such as `USER`, `PATH`, `HOME` and so on. It is also possible to set an environment variable directly on the node 
-command line with the –e switch.
+Language runtimes also provide ways of accessing environment variables.  .NET  
+provides `Environment.GetEnvironmentVariables();`, Java provides `System.getenv`, Javascript `process.env`, and Go provides `os.Environ` or `os.GetEnv`.
 
-```shell
-$ node –e ‘process.env.foo = “bar”’ myapp/index.js
-```
+With a few notable exceptions, that we will cover soon, it’s a healthy choice to mostly avoid injecting custom 
+environment variables as application configuration. Again, any non-trivial system will have a large number of configuration
+items, and managing and setting large numbers of environment variables quickly becomes unwieldy, and are generally
+hard to _source control_.
 
-With a few notable exceptions, that we will cover soon, it’s a good design rule to mostly avoid injecting custom 
-environment variables as application configuration.
-
-> __Good Design Rule:__  mostly, avoid injecting environment variables as application configuration.
+> __Healthy Choice:__  mostly, avoid injecting environment variables as application configuration.
 
 
-Because env vars touch on this very important, and common problem, topic I’ll cover now it now: it’s a good 
-_organisational_ design rule to combine operations with development – it is the very definition of devops, more essential
-and than merely adopting “infrastructure as code”.  It's what I might mean if I ever used the phrase “full-stack”, which 
+#### Devops
+
+Because env vars touch on an  important and common problem, we’ll cover now it now: it’s a healthy choice to combine
+development with operations  – we feel it is the essence of _devops_, more so
+ than merely adopting “infrastructure as code”.  It's what we might mean if we ever used the phrase “full-stack”, which 
 is a non-sense term for too many reasons to cover here.
 
-> __Good Design Rule:__  combining operations with development, in a _true_ devops organisational model delivers
+> __Healthy Choice:__  combining development with operations, in a _true_ devops organisational model delivers
 > more flexible and scalable applications, more efficiently and more effectively.
 
 Broadly speaking, if your operational environment’s security context is insistent on a “separation of authority” between
-operations and development, it is likely to limit your local deployment flexibility, but even so, good application design 
-can mitigate this, which I will demonstrate eventually.
+development and operations, it is likely to limit your local deployment flexibility, but even so, good application design 
+can mitigate this, which hopefully we will demonstrate eventually.
 
 ### Input / Output
 
 Since, as a rule, it’s good design practice to minimise the use of command line arguments and environment variables, 
-we are left with the Node.js I/O facilities to load application configuration from the file system or network interfaces.
+we are left with the runtime I/O facilities to load application configuration from the file system or network interfaces.
 
 
 Since for the purpose of this module, we have constrained our definition of application configuration to _static or 
 immutable_ contextual information provided on application bootstrap, and the _network_ is rarely either of those, it 
-follows that is is a good design to get application configuration from the file system (ideally your 
+follows that is is a healthy choice to get application configuration from the file system (ideally your 
 application bundle)
 
-> __Good Design Rule:__  inject configuration from read-only files bundled with your application.
+> __Healthy Choice:__  inject configuration from read-only files bundled with your application.
 
-<a name="constants">The _Word_ on CONSTANTS</a>
----------------------------------------------
-
-Now, before we get into the weeds with modules, lets just have _the word_ on `CONSTANTS`. Configuration and constants 
-are also separate concerns, since configuration is by definition NOT CONSTANT.  
-
-But it's not uncommon to see this kind of code.
-
-```javascript
-const constants = {};
-constants.ENV = process.env.NODE_ENV; // is a smell, say no more
-```
-
-Noting that JavaScript doesn't cater well for object constants and we adopt `UPPER_SNAKE_CASE` as a well understood 
-convention to indicate constancy instead, then apart from the obvious, that the `ENV` property is not in fact a `const`,
-the `process.env.NODE_ENV` is by definition, essentially a variable, constant only in the lifetime or scope of an
-application's deployment context.
-
-> __Good Design Rule:__  separate CONSTANTS from configuration.
-
-
-The `constants` const is also _global_ to the scope of the module, and worse, often exported as such. Global constants
-are a smell, and constants should be grouped, enumerated and exposed via a meaningful module:
-
-```javascript
-const {FINE_STRUCTURE} = require ('FundamentalConstants'); 
-const {c,G} = require ('PhysicalConstants');
-```
-> __Good Design Rule:__  constants should be grouped, enumerated and exposed via a meaningful module.
 
 <a name="jscondig">Common Configuration Modules</a>
 -------------------------------------

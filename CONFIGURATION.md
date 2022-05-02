@@ -22,7 +22,7 @@ we might find our code used in.
     1. [Common File Formats](#formats)
     2. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
     3. [Structured (and Typed) Values](#structured)
-    4. [Encrypted Values](#expansion)
+    4. [Variable Expansion](#expansion)
     5. [Encrypted Values](#decrypt)
     6. [Remote Values](#fetch)
     7. [Scripting and Expressions](#expressions)

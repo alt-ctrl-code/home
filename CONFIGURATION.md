@@ -17,15 +17,15 @@ we might find our code used in.
 6. [As a "Service"](#notaservice)
 7. [Dynamic Configuration](#notdynamic)
 8. [A _Thought_ on CONSTANTS & CONFIG](#constants)
-9. [Common Configuration Modules](#constants)
-   1. [dotenv](#dotenv)
-   1. [config](#config)
-10. [Scope All Config Values](#scope)
-11. [Extending Config](#extending)
-12. [Variable Expansion](#expansion)
-13. [Decryption](#decrypt)
-14. [Remote Config With Fetch](#fetch)
-15. [ConfigFactory](#factory)
+9. [Configuration Facades](#facades)
+10. [Feature Wishlist](#features)
+    1. [Basic Formats](#formats)
+    2. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
+    3. [Structured (and Typed) Values](#structured)
+    4. [Encrypted Values](#expansion)
+    5. [Remote Values](#fetch)
+    6. [Integrated with Dependency Injection](#cdi)
+    
 
 <a name="definition">Definition</a>
 -----------------------------------------------
@@ -58,12 +58,12 @@ Let's address server languages here, and defer the browser for later.
 ### <a name="cli">Command-Line Arguments</a>
 
 Language runtimes provide ways of accessing commandline arguments, traditionally accessed though a `main` function
-as an array of string, like `Main (string[] args)` or `main (String args)`.
+as an array of string, like `Main (string[] args)` or `main (String[] args)`.
 
 Many ecosystems offer alternatives to the traditional program entry point, for example
 .NET also provides `Environment.GetCommandLineArgs();`, and Go provides `os.Args`.
 
-Java retains only the `main (String args)`, but the ecosystem (including Spring Boot) tends to use -D and system
+Java retains only the `main (String[] args)`, but the ecosystem (including Spring Boot) tends to use -D and system
 properties, for example `-Dspring-boot.run.arguments=--spring.main.banner-mode=off,--customArgument=custom`.
 
 Javascript has the process object, which exposes the `process.argv` and `process.execArgv` arrays with the command-line parameters
@@ -297,247 +297,115 @@ const {c,G} = require ('PhysicalConstants');
 > __Healthy Choice:__  constants should be grouped, enumerated and exposed via a meaningful module or package.
 
 
-<a name="jscondig">Common Configuration Modules</a>
--------------------------------------
+<a name="facades">Configuration Façades</a>
+------------------------------------------
 
-### <a name="dotenv">dotenv</a>
+In Java and .NET it is common to adopt the idiomatic configuration framework, for example Spring Boot's properties, or
+Microsoft's Configuration extensions.  Other languages, like Node and Go have community packages with similar features, like
+npm [config](https://www.npmjs.com/package/config), [gonfig](https://github.com/tkanos/gonfig) or [viper](https://github.com/spf13/viper).
+In all cases, its is a healthy choice it to abstract all our configuration behind a common façade, which has the benefit 
+of standardising how it is achieved and encapsulating useful features.
 
-The JavaScript open-source community provides the popular [dotenv](https://www.npmjs.com/package/dotenv) package for 
-locally managing application configuration provided as environment variables. On the basis that the only application configuration that 
-should be injected into your application from outside should be the unique handle of the deployment (via NODE_ENV) , 
-it follows that it is also a good design rule to aver the need for and use of dotenv and related `.env` files.
+> __Healthy Choice:__ abstract all config loading behind a common façade.
 
-We're not saying dotenv isn't great, it is &ndash; just that avoiding environment variables negates the need for it.
+Not all configuration façades are equal though, so we'll examine the kind of features that we might want from a configuration
+façade package, before we "buy vs build" one.
 
-> __Good Design Rule:__  aver thus use of dotenv, if you can avoid the use of env vars.
+> __Healthy Choice:__ for easier on-boarding, use what the community use.
 
+<a name="facades">Useful Features</a>
+---------------------------------------------
 
-By design, dotenv files are also not intended to be source controlled (via .gitignore), requiring the developer to 
-manually intervene to get things running in local-development, which is bad.
+### <a name="formats">Common Formats</a>
 
-> __Good Design Rule:__  avoid any manual set up or intervention especially in local-development.
+> __Healthy Choice:__ we accept it is a "highly personal" preference, but yaml provides a good balance of fluency, nesting
+> and in-line commentary
 
-### <a name="config">config</a>
+> __Healthy Choice:__ avoid xml, it was bad for parsers, and worse for humans.  
 
-The JavaScript open-source community also provides the excellent [config](https://www.npmjs.com/package/config) package 
-for managing application configuration. As with the [logging](./LOGGING.md) material, it is a good design rule to 
-abstract all our configuration behind a common façade, which has the benefit of standardising how it is achieved and 
-encapsulating common good design features.
+### <a name="comments">Comments</a>
 
-> __Good Design Rule:__ abstract all config loading behind a common façade.
+### <a name="structured">Structured (Typed) Values</a>
 
-It is a good design rule to use the [config](https://www.npmjs.com/package/config)  package façade to isolate all 
-configuration, and aver the use of `.env` files in favour of a `config/local-development.json` file. It is also good 
-design rule to use JSON as the format, rather than .js or .yml (yes, yaml). Executable configuration and deferred 
-evaluation at bootstrap are just bad in principle, and we don’t need yet another lazy markup syntax, 
-especially one that uses whitespace as a scope discriminator.
+The node config package supports a hierarchical (dot separated) format for configuration values, and it is a healthy chpoice
+to always scope your configuration values to avoid naming collisions and conflicts, when applying modular application architectures.
 
-> __Good Design Rule:__ prefer a [config](https://www.npmjs.com/package/config) module `config/local-development.json`, in 
-> JSON over a [dotenv](https://www.npmjs.com/package/dotenv) module `.env` file.
+> __Healthy Choice:__ scope your configuration values to avoid naming collisions and conflicts, with other packages
 
-The `config` package is great out of the box, and we could just stop here, but there is a couple of features it lacks, 
-which we will design and extend.  
-
-### <a name="scope">Scope All Config Values</a>
-
-The node config package supports a hierarchical (dot separated) format for configuration values, and tt is a good design
-rule to always scope your configuration values to avoid naming collisions and conflicts, when applying modular application architectures.
-
-> __Good Design Rule:__ scope your configuration values to avoid naming collisions and conflicts.
-
-The @alt-javascript/logger scopes all it’s configuration under the “logging” configuration path, and is a good example of
+For example, scoping log related configuration under the “logging” configuration path, and is a good example of
 how this rule is applied.
 
-```json
+```yaml
 {
-"logging" :
-"format" : "
-"^^^ set a format to json for JSON output" : doco
-" level":
-"/" : "
-"@alt javascript /config crypto challenge" : "
-"^^^ set a path level to enable log lines at that folder, down to file/module" : doco
-"test" :
-"fixtures" :
-"quiet" :
-"^^^ set quiet to false to see logs in unit tests" : doco
+logging :
+  #set a format to json for JSON output
+  format : json
+  #set a level for logging categories
+  level:
+    # root log level
+    "/" : error
 ```
 
-It is sensible to put all your config under the npm package name of your module, even though I break this rule above,
-because in the real world people would be like _wtf_ if I had used `@alt-javascript/logger.levels` instead.
+It is sensible to scope all our config under the name of our package or module.
 
-> __Good Design Rule:__ scope your configuration values under the npm package name of your module.
+> __Health Choice:__ scope your configuration values under the name of our package or module.
 
-<a name="extending">Extending Config</a>
-----------------------------------------
+### <a name="cascading">Cascading Overrides, with Default Values, Environment Variables and Arguments</a>
 
-The designers of the usual config package have made it immutable by design, which is a sensible choice, but it does
-limit the flexibility of what we can achieve with it.
+> __Healthy choice:__  avoid any manual set up or intervention especially in local-development.
 
-To extend the behaviour of config is actually very easy, because it has a radically simple interface, with just two
-functions `get(path)` and `has(path)`. So easy, we added a defaultValue to the get to avoid having to `has()` check it.
+### <a name="expansion">Variable Expansion (Placeholder Resolution)</a>
 
-All we need to do is implement familiar delegator pattern, like we used for the `ConfigurableLogger` design in the Logging
-module, and intercept the behaviours.
+A great feature of some configuration libraries is variable expansion, which supports modularity and re-use across
+configuration keys, but many do not support it.
 
-We do with the `DelegatingConfig` and its extension class `ValueResolvingConfig`
+Here is an example:
 
-![DelegatingConfig](./images/DelegatingConfig.png)
-
-<a name="expansion">Variable Expansion</a>
-----------------------------------------
-A common utility feature of configuration libraries is variable expansion, that allows some modularity and re use across
-configuration keys, but config doesn’t seem to support it.
-
-```json
-{
-   "key": "value",
-   "one" : "one",
-   "placeholder": "start.${one}.${nested.two}.end",
-   "nested" : {
-      "key" : "value",
-      "two" : "two",
-      "placeholder": "start.${one}.${nested.two}.end",
-   }
-}
+```yaml
+ourapp:
+    protocol: "https"
+    host: "myserver.com"
+    port : "8080"
+    context :
+    url : "${protocol}://${host}:${port}/${context}",
+    endpoints : 
+      customer : "${url}/customer"
+      account : "${url}/account"
 ```
-We achieve this by injecting the ValueResolvingConfig , with a Resolver, which will take the value return by the
-delegate, and as a key (or input) into a deterministic process to resolve, transform or mutate to underlying value into a
-new one. From the perspective of the user, the config object remains immutable, because the value can never be
-changed.
 
-Here is the PlaceHolderResolver
-
-![PlaceHolderResolver](./images/PlaceHolderResolver.png)
-
-<a name="decrypt">Decryption</a>
---------------------------------
+### <a name="decrypt">Encrypted Values</a>
 
 Another common utility feature of configuration libraries is decrypting config values encrypted with a passphrase
 maintained outside of the source repository, effectively obfuscating your secret values as below.
 
-```json
-{
-  "placeholderEncrypted": "start.${nested.encrypted}.end",
-  "nested" : {
-     "encrypted" : "enc.pxQ6z9s/LRpGB+4ddJ8bsq8RqELmhVU2"
-  }
-}
+```yaml
+ourapp:
+    credentials:
+        user: "svc.account"
+        pass: "enc.pxQ6z9s/LRpGB+4ddJ8bsq8RqELmhVU2"
 ```
 
-It’s a good design rule, in controlled development zones, to use encrypted properties as an effective strategy to have
-your secret keys maintained as source code , and not injected or maintained on a separate deployment lifecycle,
-increasing your deployment complexity.
+It’s a healthy choice, in controlled development zones, to use encrypted properties as an effective strategy to have
+our secret keys maintained as source code, and not injected or maintained on a separate deployment lifecycle,
+increasing our deployment complexity.
 
-> __Good Design Rule:__ use encrypted properties as an effective strategy to have your secret keys  maintained 
+> __Healthy Choice:__ use encrypted properties as an effective strategy to have our secret keys maintained
 > as source code.
 
+### <a name="fetch">Remote Values</a>
 
-If you doubt the efficacy of this simple technique, take the (https://github.com/craigparra/alt-config-crypto-challenge)
+In those use cases, examined earlier, where bundled static configuration values may be problematic, it is useful to have
+a consistent approach to referencing values stored in a remote service, as below:
 
-Here is the `JasyptDecryptor`, which decrypts values encrypted with the jasypt package, taking the passphrase from the
-NODE_CONFIG_PASSPHRASE environment variable.
-
-![](./images/JasyptDecryptor.png)
-
-<a name="fetch">Remote Config With Fetch</a>
------------------------------------
-It’s easy to imagine a resolver that uses the fetch api,  but based on our earlier
-words on configuration as a service we don’t encourage it.
-
-That said, we still implemented it for raw utility and config values that start with the prefix `url.` can be 
-fetched and resolved asynchronously with the `fetch` function, and HTTP options can be specified as in the example 
-config file.  To avoid bundling `node-fetch`.
-
-You need to provide it by using `@alt-javascript/boot` to boot it into the global root context, where the package 
-will detect it.
-
-```javascript
-const {boot} = require('@alt-javascript/boot');
-const {config} = require('@alt-javascript/config');
-const fetch = require('node-fetch');
-
-boot({config,fetch})
-const webdata = await config.fetch('pathToUrlPrefixedValue'); 
+```yaml
+ourapp:
+    remote : 
+        url: "${config.server}/${env.NODE_ENV}/myapp?path=myapp.volatiles.somevalue",
+        method: get,
+        body: {},
+        headers:
+          authorization: "enc.pxQ6z9s/LRpGB+4ddJ8bsq8RqELmhVU2"
+          Content-Type: "application/json"
 ```
 
-`local-development.json`
-```json
-{
-  "jsonplaceholder": {
-    "todos": "url.https://jsonplaceholder.typicode.com/todos/1"
-  },
-  "fetchWithOpts" : {
-    "url": "url.https://jsonplaceholder.typicode.com/todos/1",
-    "authorization": "Basic dXNlcjpwYXNz",
-    "method": "get",
-    "body": {},
-    "headers": {"Content-Type": "application/json"}
-  }
-}
-```
-
-
-
-<a name="factory">ConfigFactory</a>
------------------------------------
-
-In practice, we really want the ValueResolvingConfig to do all functions, so we chain an array of resolvers in a 
-a `DelegatingResolver`.
-
-```javascript
-const Resolver = require('./Resolver');
-
-module.exports = class DelegatingResolver extends Resolver {
-  constructor(resolvers) {
-    super();
-    this.resolvers = resolvers;
-  }
-
-  resolve(config) {
-    let resolvedConfig = config;
-    for (let i = 0; i < this.resolvers.length; i++) {
-      resolvedConfig = this.resolvers[i].resolve(resolvedConfig);
-    }
-    return resolvedConfig;
-  }
-};
-```
-
-To put it all together we, we create a ConfigFactory to build and inject the complex arrangement of classes, and 
-export it as the regular config package does.
-
-```javascript
-const npmconfig = require('config');
-const ValueResolvingConfig = require('./ValueResolvingConfig');
-const DelegatingResolver = require('./DelegatingResolver');
-const PlaceHolderResolver = require('./PlaceHolderResolver');
-const PlaceHolderSelector = require('./PlaceHolderSelector');
-const JasyptDecryptor = require('./JasyptDecryptor');
-const PrefixSelector = require('./PrefixSelector');
-const URLResolver = require('./URLResolver');
-
-module.exports = class ConfigFactory {
-
-  static detectFetch(fetchArg) {
-    //...
-  }
-
-  static getConfig(config, resolver, fetchArg) {
-    const placeHolderResolver = new PlaceHolderResolver(new PlaceHolderSelector());
-    const jasyptDecryptor = new JasyptDecryptor(new PrefixSelector('enc.'));
-    const urlResolver = new URLResolver(new PrefixSelector('url.'), ConfigFactory.detectFetch(fetchArg));
-    const delegatingResolver = new DelegatingResolver(
-      [placeHolderResolver, jasyptDecryptor, urlResolver],
-    );
-    const valueResolvingConfig = new ValueResolvingConfig(config || npmconfig,
-      resolver || delegatingResolver);
-
-    placeHolderResolver.reference = valueResolvingConfig;
-    return valueResolvingConfig;
-  }
-};
-
-```
-From a user perspective, we get a valuable uplift in features, with latterly no change to our downstream 
-application code.
+### <a name="cdi">Integrated with Dependency Injection</a>

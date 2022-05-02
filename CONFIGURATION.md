@@ -17,16 +17,21 @@ we might find our code used in.
 6. [As a "Service"](#notaservice)
 7. [Dynamic Configuration](#notdynamic)
 8. [A _Thought_ on CONSTANTS & CONFIG](#constants)
-9. [Configuration Facades](#facades)
+9. [A Configuration Facade](#facades)
 10. [Feature Wishlist](#features)
-    1. [Basic Formats](#formats)
+    1. [Common File Formats](#formats)
     2. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
     3. [Structured (and Typed) Values](#structured)
     4. [Encrypted Values](#expansion)
-    5. [Remote Values](#fetch)
-    6. [Integrated with Dependency Injection](#cdi)
+    5. [Encrypted Values](#decrypt)
+    6. [Remote Values](#fetch)
+    7. [Scripting and Expressions](#expressions)
+    8. [Integrated with Dependency Injection](#cdi)
+    9. [Open For Extension](#open)
+11. [Configuration Packages, in The Market](#market)
+    1. [Package Feature Matrix](#matrix)
+    2. [Buy" vs Build](#buyvsbuild)
     
-
 <a name="definition">Definition</a>
 -----------------------------------------------
 
@@ -127,7 +132,7 @@ can mitigate this, which hopefully we will demonstrate eventually.
 -----------------------------------------------
 
 With our opening definition, and in the context of "devops",  beyond what is provided by the language and system runtime 
-environment, are the specific configuration items, such  urls, hostnames, ports, accounts and credentials that our 
+environment, are the specific configuration items, such as urls, hostnames, ports, accounts and credentials that our 
 code requires to run correctly in our various deployment contexts, such as _local, testing, integration, and 
 production_, a separate concern to our application code?  
 
@@ -297,7 +302,7 @@ const {c,G} = require ('PhysicalConstants');
 > __Healthy Choice:__  constants should be grouped, enumerated and exposed via a meaningful module or package.
 
 
-<a name="facades">Configuration Façades</a>
+<a name="facades">A Configuration Façade</a>
 ------------------------------------------
 
 In Java and .NET it is common to adopt the idiomatic configuration framework, for example Spring Boot's properties, or
@@ -313,17 +318,26 @@ façade package, before we "buy vs build" one.
 
 > __Healthy Choice:__ for easier on-boarding, use what the community use.
 
-<a name="facades">Useful Features</a>
+<a name="features">Feature Wishlist</a>
 ---------------------------------------------
 
-### <a name="formats">Common Formats</a>
+### <a name="formats">Common File Formats</a>
+
+It is useful, to be able to specify configuration in a variety of familiar (and perhaps less familiar) formats - especially
+the most common ones (YAML, JSON, Java Properties).  TOML, HCL and others are interesting, but perhaps more idiosyncratic. 
 
 > __Healthy Choice:__ we accept it is a "highly personal" preference, but yaml provides a good balance of fluency, nesting
 > and in-line commentary
 
+XML is increasingly rare, likely because of its unwieldy syntax, and essential complexity (attributes, schemas etc).  Its
+a healthy choice to avoid the use of XML.  Thank-you Douglas Crockford (for JSON), and Clark Evans et al (for YAML).
+
 > __Healthy Choice:__ avoid xml, it was bad for parsers, and worse for humans.  
 
 ### <a name="comments">Comments</a>
+
+It is useful, as a consequence of the file format we choose, to have comments in our configuration files.  YAML and Java
+property files support comments, whereas JSON typically does not.
 
 ### <a name="structured">Structured (Typed) Values</a>
 
@@ -336,7 +350,6 @@ For example, scoping log related configuration under the “logging” configura
 how this rule is applied.
 
 ```yaml
-{
 logging :
   #set a format to json for JSON output
   format : json
@@ -356,7 +369,7 @@ It is sensible to scope all our config under the name of our package or module.
 
 ### <a name="expansion">Variable Expansion (Placeholder Resolution)</a>
 
-A great feature of some configuration libraries is variable expansion, which supports modularity and re-use across
+A feature of some configuration libraries is variable expansion, which supports modularity and re-use across
 configuration keys, but many do not support it.
 
 Here is an example:
@@ -372,6 +385,8 @@ ourapp:
       customer : "${url}/customer"
       account : "${url}/account"
 ```
+
+> __Healthy choice:__  defer complicated configuration expressions to initialisation code in the application itself.
 
 ### <a name="decrypt">Encrypted Values</a>
 
@@ -408,4 +423,23 @@ ourapp:
           Content-Type: "application/json"
 ```
 
+### <a name="expressions">Scripting and Expressions</a>
+
+Some configuration libraries such Spring (SpEl), and Hashicorp's HCL offer support for more complex expression resolution,
+in the configuration loading (or injection).
+
+Beyond the use cases we have set out above, which support modularity (re-use), source-controlled secrets, and de-referencing
+volatile values, its a healthy choice to avoid complex expressions in configuration, and defer them to initialisation code
+within the application itself.
+
+> __Healthy Choice:__ avoid complex expressions in configuration, and defer them to initialisation code
+within the application itself.
+
 ### <a name="cdi">Integrated with Dependency Injection</a>
+### <a name="open">Open For Extension</a>
+
+<a name="facades">Configuration Packages, in The Market</a>
+------------------------------------------
+
+### <a name="matrix">Package Feature Matrix</a>
+### <a name="buyvsbuild">"Buy" vs Build</a>

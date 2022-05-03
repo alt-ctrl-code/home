@@ -17,7 +17,7 @@ we might find our code used in.
 6. [As a "Service"](#notaservice)
 7. [Dynamic Configuration](#notdynamic)
 8. [A _Thought_ on CONSTANTS & CONFIG](#constants)
-9. [A Configuration Facade](#facades)
+9. [A Configuration Façade](#facades)
 10. [Feature Wishlist](#features)
     1. [Common File Formats](#formats)
     2. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
@@ -210,7 +210,7 @@ where the approval cycle is slower than the volatility of the system configurati
 to be refreshed on a schedule faster than the regulator can support or allow), could be such an example.  There would
 be endless others.
 
-In general, if necessary,  its a healthy choice, to minimise non-source controlled configuration as much as possible, and _dereference_ 
+In general, if necessary,  it's a healthy choice, to minimise non-source controlled configuration as much as possible, and _dereference_ 
 those we cannot with a consistent mechanism if possible. 
 
 > __Healthy Choice:__  if necessary, for non-technical reasons, minimise non-source controlled configuration as much as possible, and _dereference_
@@ -223,7 +223,7 @@ those we cannot with a consistent mechanism if possible.
 It is not an uncommon pattern to provide configuration as a service, hosted remotely and ingested over the network. [Spring Cloud Config](https://spring.io/projects/spring-cloud-config) is  
  such an example.
 
-With respect to our __healthy choice__ that its good to maintain our application configuration 
+With respect to our __healthy choice__ that it's good to maintain our application configuration 
  alongside our application source code, then it follows that having a build lifecycle for our
 configuration in another application service is undesirable. 
 
@@ -308,18 +308,24 @@ const {c,G} = require ('PhysicalConstants');
 In Java and .NET it is common to adopt the idiomatic configuration framework, for example Spring Boot's properties, or
 Microsoft's Configuration extensions.  Other languages, like Node and Go have community packages with similar features, like
 npm [config](https://www.npmjs.com/package/config), [gonfig](https://github.com/tkanos/gonfig) or [viper](https://github.com/spf13/viper).
-In all cases, its is a healthy choice it to abstract all our configuration behind a common façade, which has the benefit 
-of standardising how it is achieved and encapsulating useful features.
 
-> __Healthy Choice:__ abstract all config loading behind a common façade.
+In all cases, it's is a healthy choice it to abstract _all_ our configuration behind a common façade, which has the benefit 
+of standardising how it is achieved and encapsulating useful features, including access to environment variables and 
+command line arguments.
 
-Not all configuration façades are equal though, so we'll examine the kind of features that we might want from a configuration
-façade package, before we "buy vs build" one.
+> __Healthy Choice:__ abstract all config loading behind a common façade, including access to environment variables and
+command line arguments.
+
+Generally speaking, where a configuration façade meets our needs, it's a healthy choice to adopt what the ecosystem community uses,
+as it simplifies up-skilling new team members, if our solution is _idiomatic_.  
 
 > __Healthy Choice:__ for easier on-boarding, use what the community use.
 
 <a name="features">Feature Wishlist</a>
 ---------------------------------------------
+
+That said, not all configuration façades are equal, so we'll examine the kind of features that we might want from a configuration
+façade package, before we choose, extend or build one from scratch.
 
 ### <a name="formats">Common File Formats</a>
 
@@ -329,7 +335,7 @@ the most common ones (YAML, JSON, Java Properties).  TOML, HCL and others are in
 > __Healthy Choice:__ we accept it is a "highly personal" preference, but yaml provides a good balance of fluency, nesting
 > and in-line commentary
 
-XML is increasingly rare, likely because of its unwieldy syntax, and essential complexity (attributes, schemas etc).  Its
+XML is increasingly rare, likely because of its unwieldy syntax, and essential complexity (attributes, schemas etc).  It's
 a healthy choice to avoid the use of XML.  Thank-you Douglas Crockford (for JSON), and Clark Evans et al (for YAML).
 
 > __Healthy Choice:__ avoid xml, it was bad for parsers, and worse for humans.  
@@ -341,8 +347,9 @@ property files support comments, whereas JSON typically does not.
 
 ### <a name="structured">Structured (Typed) Values</a>
 
-The node config package supports a hierarchical (dot separated) format for configuration values, and it is a healthy chpoice
-to always scope your configuration values to avoid naming collisions and conflicts, when applying modular application architectures.
+Most config packages support a hierarchical (dot separated) format for configuration values, and it is a healthy choice
+to always scope your configuration values to avoid naming collisions and conflicts, when applying modular application 
+architectures.
 
 > __Healthy Choice:__ scope your configuration values to avoid naming collisions and conflicts, with other packages
 
@@ -359,11 +366,27 @@ logging :
     "/" : error
 ```
 
-It is sensible to scope all our config under the name of our package or module.
+It is sensible to scope all our config under the name of our package or module.  
 
 > __Health Choice:__ scope your configuration values under the name of our package or module.
 
+In strongly typed languages, like Go and C#, configuration packages also allow loading of structured configuration into
+classes or structs, which can be beneficial in the context of those languages.
+
 ### <a name="cascading">Cascading Overrides, with Default Values, Environment Variables and Arguments</a>
+
+Adopting a configuration façade, allows us to intercept values provided as environment variables, set context-aware values, 
+for example between test and production environments, and to provide default values for those when they are not provided
+by the runtime system, for example in the local development context.
+
+`local-development.yaml`
+```yaml
+env:
+  A_PROVIDED_VAR: 'noneedtosetthislocally'
+```
+
+It's a healthy choice to use context-aware configuration façade, to avoid any manual set up or intervention in local-development.  This
+helps new team members stream-line the project setup locally, if we do not have to fiddle with settings outside of the project.
 
 > __Healthy choice:__  avoid any manual set up or intervention especially in local-development.
 
@@ -425,21 +448,33 @@ ourapp:
 
 ### <a name="expressions">Scripting and Expressions</a>
 
-Some configuration libraries such Spring (SpEl), and Hashicorp's HCL offer support for more complex expression resolution,
+Some configuration libraries such Spring (SpEL), and Hashicorp's HCL offer support for more complex expression resolution,
 in the configuration loading (or injection).
 
 Beyond the use cases we have set out above, which support modularity (re-use), source-controlled secrets, and de-referencing
-volatile values, its a healthy choice to avoid complex expressions in configuration, and defer them to initialisation code
+volatile values, it's a healthy choice to avoid complex expressions in configuration, and defer them to initialisation code
 within the application itself.
 
 > __Healthy Choice:__ avoid complex expressions in configuration, and defer them to initialisation code
 within the application itself.
 
 ### <a name="cdi">Integrated with Dependency Injection</a>
+
+It can be useful,  if we prefer to use a dependency injection mechanism, if the configuration façade is integrated with
+the DI mechanism, allowing class or structure properties to be wired directly from the configuration, for example Spring Boot has a
+well understood mechanism for this via its @Value annotation.
+
 ### <a name="open">Open For Extension</a>
+
+Ideally, whichever mechanism we choose, it may never fit the unique needs of our application, and those cases it is useful if the
+configuration façade is "open for extension", with a pluggable design that can supports novel behaviours not catered for by the original
+authors.
 
 <a name="facades">Configuration Packages, in The Market</a>
 ------------------------------------------
 
+We have mentioned several configuration packages throughout the text, and we compare them below.
+
 ### <a name="matrix">Package Feature Matrix</a>
+
 ### <a name="buyvsbuild">"Buy" vs Build</a>

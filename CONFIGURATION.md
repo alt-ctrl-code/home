@@ -32,7 +32,7 @@ we might find our code used in.
     11. [Open For Extension](#open)
 11. [Configuration Packages, in The Market](#market)
     1. [Package Feature Matrix](#matrix)
-    2. [Buy" vs Build](#buyvsbuild)
+    2. [Buy vs Build](#buyvsbuild)
     
 <a name="definition">Definition</a>
 -----------------------------------------------

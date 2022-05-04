@@ -20,14 +20,16 @@ we might find our code used in.
 9. [A Configuration Façade](#facades)
 10. [Feature Wishlist](#features)
     1. [Common File Formats](#formats)
-    2. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
-    3. [Structured (and Typed) Values](#structured)
-    4. [Variable Expansion](#expansion)
-    5. [Encrypted Values](#decrypt)
-    6. [Remote Values](#fetch)
-    7. [Scripting and Expressions](#expressions)
-    8. [Integrated with Dependency Injection](#cdi)
-    9. [Open For Extension](#open)
+    2. [Polyglot and Isomorphic](#polyiso)
+    3. [Comments](#comments)
+    4. [Cascading Overrides, with Default Values, Environment Variables and Arguments](#cascades)
+    5. [Structured (and Typed) Values](#structured)
+    6. [Variable Expansion](#expansion)
+    7. [Encrypted Values](#decrypt)
+    8. [Remote Values](#fetch)
+    9. [Scripting and Expressions](#expressions)
+    10. [Integrated with Dependency Injection](#cdi)
+    11. [Open For Extension](#open)
 11. [Configuration Packages, in The Market](#market)
     1. [Package Feature Matrix](#matrix)
     2. [Buy" vs Build](#buyvsbuild)
@@ -339,6 +341,12 @@ XML is increasingly rare, likely because of its unwieldy syntax, and essential c
 a healthy choice to avoid the use of XML.  Thank-you Douglas Crockford (for JSON), and Clark Evans et al (for YAML).
 
 > __Healthy Choice:__ avoid xml, it was bad for parsers, and worse for humans.  
+
+### <a name="polyiso">Polyglot and Isomorphic</a>
+
+It is useful, to be able to use the same configuration mechanism in various languages (polyglot), particularly in the browser,
+and even to share the same code between server and client or browser (isomorphic).
+
 
 ### <a name="comments">Comments</a>
 
